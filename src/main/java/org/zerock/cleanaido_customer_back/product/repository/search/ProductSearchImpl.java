@@ -34,15 +34,14 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                         Projections.bean(
                                 ProductListDTO.class,
 //                                product.pno,
+                                product.pno,
                                 product.pcode,
                                 product.pname,
                                 product.price,
                                 product.quantity,
+                                product.pstatus,
                                 product.createdAt,
                                 product.updatedAt,
-                                product.releasedAt,
-                                product.pstatus,
-                                product.ptags,
                                 product.sellerId
 
                         )
