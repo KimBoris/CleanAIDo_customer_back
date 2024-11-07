@@ -55,6 +55,7 @@ public class Product {
 
     @Column(name = "user_id")
     private String sellerId;
+
 //
 //    @ElementCollection
 //    @Builder.Default

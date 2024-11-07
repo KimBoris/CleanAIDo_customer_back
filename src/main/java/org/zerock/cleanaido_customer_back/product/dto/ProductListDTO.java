@@ -12,12 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ProductListDTO {
-    private int pno;
-    private String pcode;
+    private Long pno;
     private String pname;
     private int price;
-    private int quantity;
-    private LocalDateTime createdAt;
-    private LocalDateTime releasedAt;
     private String pstatus;
 }

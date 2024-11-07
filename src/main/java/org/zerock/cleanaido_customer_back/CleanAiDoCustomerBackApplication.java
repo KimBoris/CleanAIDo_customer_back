@@ -9,5 +9,4 @@ public class CleanAiDoCustomerBackApplication {
     public static void main(String[] args) {
         SpringApplication.run(CleanAiDoCustomerBackApplication.class, args);
     }
-
 }

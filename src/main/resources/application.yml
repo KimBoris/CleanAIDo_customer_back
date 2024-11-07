@@ -39,3 +39,4 @@ org:
 logging:
   level:
     org.springframework.security.web: TRACE
+
