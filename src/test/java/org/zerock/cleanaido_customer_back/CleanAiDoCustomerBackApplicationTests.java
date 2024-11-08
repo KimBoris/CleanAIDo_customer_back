@@ -57,31 +57,31 @@ class CleanAiDoCustomerBackApplicationTests {
         });
     }
 
-    @Test
-    @Commit
-    @Transactional
-    public void addFile() {
-
-
-        CustomerListDTO dto = new CustomerListDTO();
-        IntStream.rangeClosed(0, 20).forEach(i -> {
-            Customer customer = Customer.builder()
-                    .customerId("Customer1")
-                    .customerName("Customer")
-                    .customerPw("1111")
-                    .birthDate(LocalDate.now())
-                    .createDate(Timestamp.valueOf(now()))
-                    .updatedDate(Timestamp.valueOf(now()))
-                    .phoneNumber("010-3267-2442")
-                    .delFlag(false)
-                    .address("부산광역시 부산진구 양정동")
-                    .profileImageUrl("Profile1")
-                    .build();
-
-            repository.save(customer);
-        });
-
-
-    }
+//    @Test
+//    @Commit
+//    @Transactional
+//    public void addFile() {
+//
+//
+//        CustomerListDTO dto = new CustomerListDTO();
+//        IntStream.rangeClosed(0, 20).forEach(i -> {
+//            Customer customer = Customer.builder()
+//                    .customerId("Customer1")
+//                    .customerName("Customer")
+//                    .customerPw("1111")
+//                    .birthDate(LocalDate.now())
+//                    .createDate(Timestamp.valueOf(now()))
+//                    .updatedDate(Timestamp.valueOf(now()))
+//                    .phoneNumber("010-3267-2442")
+//                    .delFlag(false)
+//                    .address("부산광역시 부산진구 양정동")
+//                    .profileImageUrl("Profile1")
+//                    .build();
+//
+//            repository.save(customer);
+//        });
+//
+//
+//    }
 
 }
