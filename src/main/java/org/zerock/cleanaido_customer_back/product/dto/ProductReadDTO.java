@@ -1,23 +1,23 @@
 package org.zerock.cleanaido_customer_back.product.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.zerock.cleanaido_customer_back.product.entity.ImageFiles;
 
-import java.util.Set;
-
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductListDTO {
+public class ProductReadDTO {
+
     private Long pno;
     private String pname;
     private int price;
     private String pstatus;
-    private String fileName;
+    private List<String> filename;
 
 }
