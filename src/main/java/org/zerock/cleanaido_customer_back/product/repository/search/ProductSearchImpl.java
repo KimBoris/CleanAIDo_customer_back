@@ -9,6 +9,7 @@ import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
 import org.zerock.cleanaido_customer_back.product.entity.Product;
+import org.zerock.cleanaido_customer_back.product.entity.QImageFiles;
 import org.zerock.cleanaido_customer_back.product.entity.QProduct;
 
 import java.util.List;
@@ -21,9 +22,13 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
     @Override
     public PageResponseDTO<ProductListDTO> list(PageRequestDTO pageRequestDTO) {
 
-            QProduct product = QProduct.product;
+        QProduct product = QProduct.product;
+        QImageFiles imageFiles = QImageFiles.imageFiles;
 
-        JPQLQuery<Product> query = from(product).orderBy(product.pno.desc());
+        JPQLQuery<Product> query = from(product);
+        query.leftJoin(product.imageFiles, imageFiles).on(imageFiles.ord.eq(0));
+
+        query.orderBy(product.pno.desc());
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
 
@@ -33,17 +38,11 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 query.select(
                         Projections.bean(
                                 ProductListDTO.class,
-//                                product.pno,
                                 product.pno,
-                                product.pcode,
                                 product.pname,
                                 product.price,
-                                product.quantity,
                                 product.pstatus,
-                                product.createdAt,
-                                product.updatedAt,
-                                product.sellerId
-
+                                imageFiles.fileName.as("fileName")
                         )
                 );
         List<ProductListDTO> dtoList = results.fetch();

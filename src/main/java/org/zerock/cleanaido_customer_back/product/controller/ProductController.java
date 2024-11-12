@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
+import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
 import org.zerock.cleanaido_customer_back.product.entity.Product;
 import org.zerock.cleanaido_customer_back.product.service.ProductService;
 
@@ -31,15 +32,24 @@ public class ProductController {
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
-
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
                 .page(page)
                 .size(size)
                 .build();
+
         log.info("-----------------");
         log.info(page);
         log.info(size);
+        log.info(type);
 
         return ResponseEntity.ok(productService.listProduct(pageRequestDTO));
+    }
+
+
+    @GetMapping("read/{pno}")
+    public ResponseEntity<ProductReadDTO> read(@PathVariable Long pno)
+    {
+        ProductReadDTO readDTO = productService.readProduct(pno);
+        return ResponseEntity.ok(readDTO);
     }
 }

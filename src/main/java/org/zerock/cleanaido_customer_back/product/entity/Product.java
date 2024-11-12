@@ -2,7 +2,6 @@ package org.zerock.cleanaido_customer_back.product.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -55,6 +54,37 @@ public class Product {
 
     @Column(name = "user_id")
     private String sellerId;
+
+    @ElementCollection
+    @Builder.Default
+    private Set<ImageFiles> imageFiles = new HashSet<>();
+
+    public void addImageFile(String filename, boolean type){
+        imageFiles.add(new ImageFiles(imageFiles.size(),filename, type));
+    }
+
+    public void clearImageFiles()
+    {
+        imageFiles.clear();
+    }
+
+    @ElementCollection
+    @Builder.Default
+    private Set<UsageImageFiles> usageImageFiles = new HashSet<>();
+
+    public void addUsingImageFile(String filename)
+    {
+        usageImageFiles.add(new  UsageImageFiles(imageFiles.size(),filename));
+    }
+    public void clearUsageImageFile(){
+        usageImageFiles.clear();
+
+    }
+
+//
+//    @ElementCollection
+//    @Builder.Default
+//    @Column(name ="product_image")
 
 //
 //    @ElementCollection
