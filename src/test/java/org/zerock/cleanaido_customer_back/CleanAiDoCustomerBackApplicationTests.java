@@ -61,12 +61,10 @@ class CleanAiDoCustomerBackApplicationTests {
     @Commit
     @Transactional
     public void addFile() {
-
-
         CustomerListDTO dto = new CustomerListDTO();
         IntStream.rangeClosed(0, 20).forEach(i -> {
             Customer customer = Customer.builder()
-                    .customerId("Customer1")
+                    .customerId((long) i)
                     .customerName("Customer")
                     .customerPw("1111")
                     .birthDate(LocalDate.now())
