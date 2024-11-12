@@ -1,12 +1,31 @@
+//package org.zerock.cleanaido_customer_back;
+//
+//import org.springframework.boot.SpringApplication;
+//import org.springframework.boot.autoconfigure.SpringBootApplication;
+//
+//@SpringBootApplication
+//public class CleanAiDoCustomerBackApplication {
+//
+//    public static void main(String[] args) {
+//        SpringApplication.run(CleanAiDoCustomerBackApplication.class, args);
+//    }
+//}
 package org.zerock.cleanaido_customer_back;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
+@EntityScan(basePackages = {
+        "org.zerock.cleanaido_customer_back.order.entity",
+        "org.zerock.cleanaido_customer_back.product.entity",
+        "org.zerock.cleanaido_customer_back.customer.entity" // customer 패키지 추가
+})
 public class CleanAiDoCustomerBackApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CleanAiDoCustomerBackApplication.class, args);
     }
 }
+
