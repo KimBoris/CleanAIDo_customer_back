@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 
 public class CustomerListDTO {
-    private Long customerId;
+    private String customerId;
 
     private String customerPw;
 

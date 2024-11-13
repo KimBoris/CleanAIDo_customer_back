@@ -27,7 +27,7 @@ public class OrderService {
     private final ProductRepository productRepository;
 
     public OrderDTO placeOrder(PurchaseDTO purchaseDTO) {
-        Customer customer = customerRepository.findById(purchaseDTO.getCustomerId())
+        Customer customer = customerRepository.findByCustomerId(purchaseDTO.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + purchaseDTO.getCustomerId()));
 
         Order order = Order.builder()
@@ -44,7 +44,6 @@ public class OrderService {
             Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + detailDTO.getProductId()));
 
-            // Product의 가격으로 OrderDetail 생성
             OrderDetail orderDetail = OrderDetail.builder()
                     .product(product)
                     .quantity(detailDTO.getQuantity())
@@ -62,13 +61,22 @@ public class OrderService {
         return new OrderDTO(savedOrder);
     }
 
-    public List<OrderDTO> getCustomerOrders(Long customerId) {
-        Customer customer = customerRepository.findById(customerId)
+    public List<OrderDTO> getCustomerOrders(String customerId) {
+        Customer customer = customerRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
 
         return orderRepository.findByCustomer(customer)
                 .stream()
                 .map(OrderDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public void updateOrderStatus(Long orderNumber, String status) {
+        Order order = orderRepository.findById(orderNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderNumber));
+
+        // 상태 업데이트
+        order.setOrderStatus(status);
+        orderRepository.save(order);
     }
 }

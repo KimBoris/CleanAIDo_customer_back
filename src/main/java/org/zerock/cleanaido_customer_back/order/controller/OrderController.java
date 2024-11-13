@@ -1,4 +1,3 @@
-
 package org.zerock.cleanaido_customer_back.order.controller;
 
 import lombok.RequiredArgsConstructor;
@@ -27,8 +26,16 @@ public class OrderController {
 
     // 고객 주문 목록 조회
     @GetMapping("/list")
-    public ResponseEntity<List<OrderDTO>> getCustomerOrders(@RequestParam Long customerId) {
+    public ResponseEntity<List<OrderDTO>> getCustomerOrders(@RequestParam String customerId) {
         List<OrderDTO> orderList = orderService.getCustomerOrders(customerId);
         return ResponseEntity.ok(orderList);
+    }
+
+    @PatchMapping("/{orderNumber}/status")
+    public ResponseEntity<String> updateOrderStatus(
+            @PathVariable Long orderNumber,
+            @RequestParam String status) {
+        orderService.updateOrderStatus(orderNumber, status);
+        return ResponseEntity.ok("Order status updated to " + status);
     }
 }

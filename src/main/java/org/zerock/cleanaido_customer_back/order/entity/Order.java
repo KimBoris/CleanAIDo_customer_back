@@ -23,7 +23,7 @@ public class Order {
     private Long orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false) // String 타입인 customerId를 외래 키로 참조
     private Customer customer;
 
     @Column(name = "phone_number", length = 50)
@@ -46,6 +46,10 @@ public class Order {
 
     @Column(name = "order_status", length = 50)
     private String orderStatus;
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default

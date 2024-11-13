@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class OrderDTO {
 
     private Long orderNumber;
-    private long customerId;
+    private String customerId;
     private String phoneNumber;
     private String deliveryAddress;
     private String deliveryMessage;
