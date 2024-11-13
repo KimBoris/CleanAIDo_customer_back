@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
+import org.zerock.cleanaido_customer_back.common.dto.SearchDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
 import org.zerock.cleanaido_customer_back.product.entity.Product;
@@ -31,17 +32,31 @@ public class ProductController {
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
+
+        SearchDTO searchDTO = SearchDTO.builder()
+                .searchType(type)
+                .keyword(keyword)
+                .build();
+
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
                 .page(page)
                 .size(size)
+                .searchDTO(searchDTO)
                 .build();
 
-        log.info("-----------------");
-        log.info(page);
-        log.info(size);
-        log.info(type);
+        if(searchDTO.getKeyword() == null || searchDTO.getKeyword().isEmpty()) {
+            log.info("Keyword is null or empty");
+            log.info("-----------------");
+            return ResponseEntity.ok(productService.listProduct(pageRequestDTO));
+        }
+        else {
+            log.info("type is : " + searchDTO.getSearchType());
+            log.info("keyword is : " + searchDTO.getKeyword());
+            return ResponseEntity.ok(productService.search(pageRequestDTO));
+        }
 
-        return ResponseEntity.ok(productService.listProduct(pageRequestDTO));
+
+
     }
 
 
