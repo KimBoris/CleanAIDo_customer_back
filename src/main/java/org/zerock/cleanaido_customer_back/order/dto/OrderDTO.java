@@ -18,6 +18,7 @@ public class OrderDTO {
 
     private Long orderNumber;
     private long customerId;
+    private String phoneNumber;
     private String deliveryAddress;
     private String deliveryMessage;
     private int totalPrice;
@@ -28,6 +29,7 @@ public class OrderDTO {
     public OrderDTO(Order order) {
         this.orderNumber = order.getOrderNumber();
         this.customerId = order.getCustomer().getCustomerId();
+        this.phoneNumber = order.getPhoneNumber();
         this.deliveryAddress = order.getDeliveryAddress();
         this.deliveryMessage = order.getDeliveryMessage();
         this.totalPrice = order.getTotalPrice();

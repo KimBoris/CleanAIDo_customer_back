@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString(exclude = "orderDetails") // 순환 참조 방지
+@ToString(exclude = "orderDetails")
 @Table(name = "orders")
 public class Order {
 
@@ -48,17 +48,14 @@ public class Order {
     private String orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default  // @Builder 사용 시 기본값 설정
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     public void addOrderDetail(OrderDetail orderDetail) {
-        if (orderDetails == null) {
-            orderDetails = new ArrayList<>();
-        }
         this.orderDetails.add(orderDetail);
         orderDetail.setOrder(this);
     }
 
-    // 총 가격 설정 메서드 추가
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
