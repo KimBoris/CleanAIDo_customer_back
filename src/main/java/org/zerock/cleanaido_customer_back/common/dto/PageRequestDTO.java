@@ -22,6 +22,6 @@ public class PageRequestDTO {
     @Max(value = 100, message = "cannot over 100")
     private int size = 10;
 
-//    private SearchDTO searchDTO;
+    private SearchDTO searchDTO;
 
 }

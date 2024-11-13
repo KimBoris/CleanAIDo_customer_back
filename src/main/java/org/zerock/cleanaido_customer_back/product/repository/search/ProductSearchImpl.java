@@ -1,7 +1,11 @@
 package org.zerock.cleanaido_customer_back.product.repository.search;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -14,6 +18,7 @@ import org.zerock.cleanaido_customer_back.product.entity.QProduct;
 
 import java.util.List;
 
+@Log4j2
 public class ProductSearchImpl extends QuerydslRepositorySupport implements ProductSearch {
     public ProductSearchImpl() {
         super(Product.class);
@@ -55,5 +60,31 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 pageRequestDTO(pageRequestDTO).
                 build();
 
+    }
+
+
+    @Override
+    public Page<Product> searchBy(String type, String keyword, Pageable pageable) {
+
+        QProduct product = QProduct.product;
+        log.info("-----------------");
+        log.info("Search Start.");
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        // 검색 조건 분기 처리
+
+        if(keyword != null && !keyword.isEmpty()) {
+            builder.or(product.pname.containsIgnoreCase(keyword));
+            builder.or(product.ptags.containsIgnoreCase(keyword));
+//            builder.or(product.category.containsIgnoreCase(keyword));
+        }
+
+        JPQLQuery<Product> query = from(product).where(builder);
+        getQuerydsl().applyPagination(pageable, query);
+        List<Product> results = query.fetch();
+        long total = query.fetchCount();
+
+        return new PageImpl<>(results, pageable, total);
     }
 }
