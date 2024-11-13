@@ -50,7 +50,7 @@ public class ProductService {
         }
 
         List<String> fileNames = product.getImageFiles().stream()
-                .map(ImageFiles::getFileName)
+                .map(ImageFiles::getFilename)
                 .collect(Collectors.toList());
 
         return ProductReadDTO.builder()
@@ -70,13 +70,18 @@ public class ProductService {
         Page<Product> resultPage = productRepository.searchBy(type, keyword, pageable);
 
         List<ProductListDTO> dtoList = resultPage.getContent().stream()
+                .filter(product-> product.getCategory() != null)
                 .map(product -> ProductListDTO.builder()
                         .pno(product.getPno())
                         .pname(product.getPname())
                         .price(product.getPrice())
                         .pstatus(product.getPstatus())
+                        .category(product.getCategory().getCname())
                         .build()).collect(Collectors.toList());
 
+        log.info("-0-0-0-0-0-0-0-0-0-0");
+        log.info(pageable);
+        log.info(dtoList);
         return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalElements());
     }
 
