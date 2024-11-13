@@ -13,6 +13,7 @@ import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
 import org.zerock.cleanaido_customer_back.product.entity.Product;
+import org.zerock.cleanaido_customer_back.product.entity.QCategory;
 import org.zerock.cleanaido_customer_back.product.entity.QImageFiles;
 import org.zerock.cleanaido_customer_back.product.entity.QProduct;
 
@@ -29,14 +30,15 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
         QProduct product = QProduct.product;
         QImageFiles imageFiles = QImageFiles.imageFiles;
+        QCategory category = QCategory.category;
 
         JPQLQuery<Product> query = from(product);
         query.leftJoin(product.imageFiles, imageFiles).on(imageFiles.ord.eq(0));
+        query.leftJoin(product.category, category);
 
         query.orderBy(product.pno.desc());
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
-
         getQuerydsl().applyPagination(pageable, query);
 
         JPQLQuery<ProductListDTO> results =
@@ -47,7 +49,9 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 product.pname,
                                 product.price,
                                 product.pstatus,
-                                imageFiles.fileName.as("fileName")
+                                imageFiles.filename.as("filename"),
+                                category.cname.as("category")
+
                         )
                 );
         List<ProductListDTO> dtoList = results.fetch();
@@ -67,24 +71,39 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
     public Page<Product> searchBy(String type, String keyword, Pageable pageable) {
 
         QProduct product = QProduct.product;
+        QCategory category = QCategory.category;
         log.info("-----------------");
-        log.info("Search Start.");
+        log.info("Search Start." + keyword);
 
         BooleanBuilder builder = new BooleanBuilder();
 
         // 검색 조건 분기 처리
 
-        if(keyword != null && !keyword.isEmpty()) {
+        if (keyword != null && !keyword.isEmpty()) {
             builder.or(product.pname.containsIgnoreCase(keyword));
+            log.info(builder);
             builder.or(product.ptags.containsIgnoreCase(keyword));
-//            builder.or(product.category.containsIgnoreCase(keyword));
+            log.info(builder);
+                builder.or(category.cname.containsIgnoreCase(keyword));
+            log.info(builder);
+
         }
 
-        JPQLQuery<Product> query = from(product).where(builder);
+        log.info("-----------------------");
+        log.info(builder);
+
+        JPQLQuery<Product> query = from(product)
+                .leftJoin(product.category, category)
+                .where(builder);
+
+
         getQuerydsl().applyPagination(pageable, query);
+
         List<Product> results = query.fetch();
+
         long total = query.fetchCount();
 
         return new PageImpl<>(results, pageable, total);
     }
+
 }
