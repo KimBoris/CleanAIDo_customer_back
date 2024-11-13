@@ -4,9 +4,11 @@ package org.zerock.cleanaido_customer_back.customer.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.zerock.cleanaido_customer_back.order.entity.Order;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -45,5 +47,8 @@ public class Customer {
 
     @Column(name="profile_image_url")
     private String profileImageUrl;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders;
 
 }

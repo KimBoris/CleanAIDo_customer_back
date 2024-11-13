@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString(exclude = "orderDetails") // 순환 참조 방지
+@ToString(exclude = "orderDetails")
 @Table(name = "orders")
 public class Order {
 
@@ -23,7 +23,7 @@ public class Order {
     private Long orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = false) // String 타입인 customerId를 외래 키로 참조
     private Customer customer;
 
     @Column(name = "phone_number", length = 50)
@@ -47,18 +47,19 @@ public class Order {
     @Column(name = "order_status", length = 50)
     private String orderStatus;
 
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     public void addOrderDetail(OrderDetail orderDetail) {
-        if (orderDetails == null) {
-            orderDetails = new ArrayList<>();
-        }
         this.orderDetails.add(orderDetail);
         orderDetail.setOrder(this);
     }
 
-    // 총 가격 설정 메서드 추가
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
