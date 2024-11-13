@@ -4,6 +4,7 @@ package org.zerock.cleanaido_customer_back.product.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -61,5 +62,22 @@ public class ProductService {
                 .build();
     }
 
+    public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
+        String type = pageRequestDTO.getSearchDTO().getSearchType();
+        String keyword = pageRequestDTO.getSearchDTO().getKeyword();
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+
+        Page<Product> resultPage = productRepository.searchBy(type, keyword, pageable);
+
+        List<ProductListDTO> dtoList = resultPage.getContent().stream()
+                .map(product -> ProductListDTO.builder()
+                        .pno(product.getPno())
+                        .pname(product.getPname())
+                        .price(product.getPrice())
+                        .pstatus(product.getPstatus())
+                        .build()).collect(Collectors.toList());
+
+        return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalElements());
+    }
 
 }
