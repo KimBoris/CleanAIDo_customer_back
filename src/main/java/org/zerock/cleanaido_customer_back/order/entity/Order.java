@@ -48,7 +48,7 @@ public class Order {
     private String orderStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Builder.Default  // @Builder 사용 시 기본값 설정
+    @Builder.Default
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     public void addOrderDetail(OrderDetail orderDetail) {
