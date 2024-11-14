@@ -19,7 +19,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_number",unique = true, nullable = false)
+    @Column(name = "product_number", unique = true, nullable = false)
     private Long pno;
 
     @Column(name = "product_code", nullable = false, length = 100)
@@ -55,16 +55,19 @@ public class Product {
     @Column(name = "user_id")
     private String sellerId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_number")
+    private Category category;
+
     @ElementCollection
     @Builder.Default
     private Set<ImageFiles> imageFiles = new HashSet<>();
 
-    public void addImageFile(String filename, boolean type){
-        imageFiles.add(new ImageFiles(imageFiles.size(),filename, type));
+    public void addImageFile(String filename, boolean type) {
+        imageFiles.add(new ImageFiles(imageFiles.size(), filename, type));
     }
 
-    public void clearImageFiles()
-    {
+    public void clearImageFiles() {
         imageFiles.clear();
     }
 
@@ -72,30 +75,14 @@ public class Product {
     @Builder.Default
     private Set<UsageImageFiles> usageImageFiles = new HashSet<>();
 
-    public void addUsingImageFile(String filename)
-    {
-        usageImageFiles.add(new  UsageImageFiles(imageFiles.size(),filename));
+    public void addUsingImageFile(String filename) {
+        usageImageFiles.add(new UsageImageFiles(imageFiles.size(), filename));
     }
-    public void clearUsageImageFile(){
+
+    public void clearUsageImageFile() {
         usageImageFiles.clear();
 
     }
 
-//
-//    @ElementCollection
-//    @Builder.Default
-//    @Column(name ="product_image")
 
-//
-//    @ElementCollection
-//    @Builder.Default
-//    private Set<AttachFile> attachFiles = new HashSet<>();
-//
-//    public void addFile(String filename) {
-//        attachFiles.add(new AttachFile(attachFiles.size(), filename));
-//    }
-//
-//    public void clearFile() {
-//        attachFiles.clear();
-//    }
 }
