@@ -20,7 +20,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @EntityScan(basePackages = {
         "org.zerock.cleanaido_customer_back.order.entity",
         "org.zerock.cleanaido_customer_back.product.entity",
-        "org.zerock.cleanaido_customer_back.customer.entity" // customer 패키지 추가
+        "org.zerock.cleanaido_customer_back.customer.entity",
+        "org.zerock.cleanaido_customer_back.cart.entity"// customer 패키지 추가
 })
 public class CleanAiDoCustomerBackApplication {
 

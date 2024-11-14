@@ -38,27 +38,27 @@ class CleanAiDoCustomerBackApplicationTests {
     void contextLoads() {
     }
 
-    @Test
-    public void testInsertDummyOrders() {
-        String[] statuses = {"배송전", "배송중", "배송완료", "취소"};
-
-        for (int i = 1; i <= 100; i++) {
-            Order order = Order.builder()
-                    .orderNumber((long) (200 + i))
-                    .customerId("user" + i)
-                    .phoneNumber("010-5678-123" + i % 10)
-                    .deliveryAddress("서울특별시 강남구 " + i)
-                    .deliveryMessage("부재 시 문 앞에 놔주세요.")
-                    .totalPrice(10000 + (i * 500))
-                    .trackingNumber("TRACK" + i)
-                    .orderStatus(statuses[i % statuses.length])
-                    .orderDate(LocalDateTime.now())
-                    .productNumber((long) i) // productNumber 값 추가
-                    .build();
-
-            orderRepository.save(order);
-        }
-    }
+//    @Test
+//    public void testInsertDummyOrders() {
+//        String[] statuses = {"배송전", "배송중", "배송완료", "취소"};
+//
+//        for (int i = 1; i <= 100; i++) {
+//            Order order = Order.builder()
+//                    .orderNumber((long) (200 + i))
+//                    .customerId("user" + i)
+//                    .phoneNumber("010-5678-123" + i % 10)
+//                    .deliveryAddress("서울특별시 강남구 " + i)
+//                    .deliveryMessage("부재 시 문 앞에 놔주세요.")
+//                    .totalPrice(10000 + (i * 500))
+//                    .trackingNumber("TRACK" + i)
+//                    .orderStatus(statuses[i % statuses.length])
+//                    .orderDate(LocalDateTime.now())
+//                    .productNumber((long) i) // productNumber 값 추가
+//                    .build();
+//
+//            orderRepository.save(order);
+//        }
+//    }
 
 
     @Test
