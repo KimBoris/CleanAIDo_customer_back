@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.zerock.cleanaido_customer_back.category.Category;
+import org.zerock.cleanaido_customer_back.category.entity.Category;
 
 @Entity
 @AllArgsConstructor

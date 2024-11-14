@@ -1,4 +1,4 @@
-package org.zerock.cleanaido_customer_back.category;
+package org.zerock.cleanaido_customer_back.category.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

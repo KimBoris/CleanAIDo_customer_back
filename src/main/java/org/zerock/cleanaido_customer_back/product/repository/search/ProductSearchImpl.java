@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.zerock.cleanaido_customer_back.category.QCategory;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
