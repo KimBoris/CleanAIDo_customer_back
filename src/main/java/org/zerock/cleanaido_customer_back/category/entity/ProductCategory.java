@@ -1,11 +1,11 @@
-package org.zerock.cleanaido_customer_back.product.entity;
+package org.zerock.cleanaido_customer_back.category.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.zerock.cleanaido_customer_back.category.entity.Category;
+import org.zerock.cleanaido_customer_back.product.entity.Product;
 
 @Entity
 @AllArgsConstructor
@@ -24,6 +24,7 @@ public class ProductCategory {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_number")
     private Category category;
 
 

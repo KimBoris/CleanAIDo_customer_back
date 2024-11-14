@@ -13,6 +13,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
         "org.zerock.cleanaido_customer_back.product.entity",
         "org.zerock.cleanaido_customer_back.category.entity"
 })
+
+
 public class CleanAiDoCustomerBackApplication {
 
     public static void main(String[] args) {
