@@ -50,7 +50,7 @@ public class ProductService {
         }
 
         List<String> fileNames = product.getImageFiles().stream()
-                .map(ImageFiles::getFilename)
+                .map(ImageFiles::getFileName)
                 .collect(Collectors.toList());
 
         return ProductReadDTO.builder()
@@ -62,27 +62,28 @@ public class ProductService {
                 .build();
     }
 
-//    public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
-//        String type = pageRequestDTO.getSearchDTO().getSearchType();
-//        String keyword = pageRequestDTO.getSearchDTO().getKeyword();
-//        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
-//
-//        Page<Product> resultPage = productRepository.searchBy(type, keyword, pageable);
-//
-//        List<ProductListDTO> dtoList = resultPage.getContent().stream()
+    public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
+        String type = pageRequestDTO.getSearchDTO().getSearchType();
+        String keyword = pageRequestDTO.getSearchDTO().getKeyword();
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+
+        PageResponseDTO<ProductListDTO> resultPage = productRepository.searchByCategory(type, keyword,pageRequestDTO);
+
+        List<ProductListDTO> dtoList = resultPage.getDtoList().stream()
 //                .filter(product-> product.getCategory() != null)
-//                .map(product -> ProductListDTO.builder()
-//                        .pno(product.getPno())
-//                        .pname(product.getPname())
-//                        .price(product.getPrice())
-//                        .pstatus(product.getPstatus())
+                .map(product -> ProductListDTO.builder()
+                        .pno(product.getPno())
+                        .pname(product.getPname())
+                        .price(product.getPrice())
+                        .pstatus(product.getPstatus())
 //                        .category(product.getCategory().getCname())
-//                        .build()).collect(Collectors.toList());
-//
-//        log.info("-0-0-0-0-0-0-0-0-0-0");
-//        log.info(pageable);
-//        log.info(dtoList);
-//        return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalElements());
-//    }
+                        .build()).collect(Collectors.toList());
+
+        log.info("-0-0-0-0-0-0-0-0-0-0");
+        log.info(pageable);
+        log.info(dtoList);
+        return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalPage());
+    }
 
 }

@@ -15,6 +15,6 @@ import lombok.ToString;
 public class ImageFiles {
 
     private int ord;
-    private String filename;
+    private String fileName;
     private boolean type;
 }
