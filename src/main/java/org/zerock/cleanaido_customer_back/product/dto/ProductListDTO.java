@@ -19,6 +19,5 @@ public class ProductListDTO {
     private int price;
     private String pstatus;
     private String fileName;
-    private String category;
 
 }

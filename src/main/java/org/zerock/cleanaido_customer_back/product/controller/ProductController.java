@@ -19,7 +19,7 @@ import org.zerock.cleanaido_customer_back.product.service.ProductService;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
 @ToString
-@CrossOrigin(origins="http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"})
 public class ProductController {
 
     private final ProductService productService;
@@ -44,25 +44,22 @@ public class ProductController {
                 .searchDTO(searchDTO)
                 .build();
 
-        if(searchDTO.getKeyword() == null || searchDTO.getKeyword().isEmpty()) {
+        if (searchDTO.getKeyword() == null || searchDTO.getKeyword().isEmpty()) {
             log.info("Keyword is null or empty");
             log.info("-----------------");
             return ResponseEntity.ok(productService.listProduct(pageRequestDTO));
-        }
-        else {
+        } else {
             log.info("type is : " + searchDTO.getSearchType());
             log.info("keyword is : " + searchDTO.getKeyword());
             return ResponseEntity.ok(productService.search(pageRequestDTO));
         }
 
 
-
     }
 
 
     @GetMapping("read/{pno}")
-    public ResponseEntity<ProductReadDTO> read(@PathVariable Long pno)
-    {
+    public ResponseEntity<ProductReadDTO> read(@PathVariable Long pno) {
         ProductReadDTO readDTO = productService.readProduct(pno);
         return ResponseEntity.ok(readDTO);
     }

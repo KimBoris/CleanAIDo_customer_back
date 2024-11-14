@@ -12,12 +12,11 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
-import org.zerock.cleanaido_customer_back.product.entity.Product;
-import org.zerock.cleanaido_customer_back.product.entity.QCategory;
-import org.zerock.cleanaido_customer_back.product.entity.QImageFiles;
-import org.zerock.cleanaido_customer_back.product.entity.QProduct;
+import org.zerock.cleanaido_customer_back.product.entity.*;
 
 import java.util.List;
+
+import static org.zerock.cleanaido_customer_back.product.entity.QImageFiles.imageFiles;
 
 @Log4j2
 public class ProductSearchImpl extends QuerydslRepositorySupport implements ProductSearch {
@@ -30,15 +29,14 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
         QProduct product = QProduct.product;
         QImageFiles imageFiles = QImageFiles.imageFiles;
-        QCategory category = QCategory.category;
+
 
         JPQLQuery<Product> query = from(product);
         query.leftJoin(product.imageFiles, imageFiles).on(imageFiles.ord.eq(0));
-        query.leftJoin(product.category, category);
-
         query.orderBy(product.pno.desc());
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+
         getQuerydsl().applyPagination(pageable, query);
 
         JPQLQuery<ProductListDTO> results =
@@ -49,9 +47,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 product.pname,
                                 product.price,
                                 product.pstatus,
-                                imageFiles.filename.as("filename"),
-                                category.cname.as("category")
-
+                                imageFiles.fileName.as("fileName")
                         )
                 );
         List<ProductListDTO> dtoList = results.fetch();
@@ -66,11 +62,10 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
     }
 
-
     @Override
-    public Page<Product> searchBy(String type, String keyword, Pageable pageable) {
-
+    public PageResponseDTO<ProductListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO) {
         QProduct product = QProduct.product;
+        QProductCategory productCategory = QProductCategory.productCategory;
         QCategory category = QCategory.category;
         log.info("-----------------");
         log.info("Search Start." + keyword);
@@ -79,31 +74,91 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
         // 검색 조건 분기 처리
 
-        if (keyword != null && !keyword.isEmpty()) {
-            builder.or(product.pname.containsIgnoreCase(keyword));
-            log.info(builder);
-            builder.or(product.ptags.containsIgnoreCase(keyword));
-            log.info(builder);
-                builder.or(category.cname.containsIgnoreCase(keyword));
-            log.info(builder);
-
-        }
 
         log.info("-----------------------");
         log.info(builder);
 
-        JPQLQuery<Product> query = from(product)
-                .leftJoin(product.category, category)
-                .where(builder);
+        if (keyword != null && !keyword.isEmpty()) {
+            builder.or(product.pname.containsIgnoreCase(keyword));
+            builder.or(product.ptags.containsIgnoreCase(keyword));
+            builder.or(productCategory.category.cname.containsIgnoreCase(keyword));
+//                builder.or(category.cname.containsIgnoreCase(keyword));
+
+        }
+
+        JPQLQuery<Product> query = from(product);
+        query.leftJoin(product.imageFiles, imageFiles).on(imageFiles.ord.eq(0));
+        query.leftJoin(productCategory).on(product.pno.eq(productCategory.product.pno));
+        query.leftJoin(category).on(productCategory.category.cno.eq(category.cno));
+        query.orderBy(product.pno.desc());
+
+
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+
+        getQuerydsl().applyPagination(pageable, query);
+
+        JPQLQuery<ProductListDTO> results =
+                query.select(
+                        Projections.bean(
+                                ProductListDTO.class,
+                                product.pno,
+                                product.pname,
+                                product.price,
+                                product.pstatus,
+                                imageFiles.fileName.as("fileName")
+                        )
+                );
+        List<ProductListDTO> dtoList = results.fetch();
+
+        long total = query.fetchCount();
+
+        return PageResponseDTO.<ProductListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
+
+
+    @Override
+    public PageResponseDTO<ProductListDTO> searchByCategory(String type, String keyword, PageRequestDTO pageRequestDTO) {
+        QProduct product = QProduct.product;
+        QProductCategory productCategory = QProductCategory.productCategory;
+        QCategory category = QCategory.category;
+
+        JPQLQuery<Product> query = from(product);
+        query.leftJoin(product.imageFiles, imageFiles).on(imageFiles.ord.eq(0));
+        query.leftJoin(productCategory).on(product.pno.eq(productCategory.product.pno));
+        query.leftJoin(category).on(productCategory.category.cno.eq(category.cno));
+        query.where(category.cname.like("%" + keyword + "%"));
+        query.orderBy(product.pno.desc());
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
 
 
         getQuerydsl().applyPagination(pageable, query);
 
-        List<Product> results = query.fetch();
+        JPQLQuery<ProductListDTO> results =
+                query.select(
+                        Projections.bean(
+                                ProductListDTO.class,
+                                product.pno,
+                                product.pname,
+                                product.price,
+                                product.pstatus,
+                                imageFiles.fileName.as("fileName")
+                        )
+                );
+        List<ProductListDTO> dtoList = results.fetch();
+
 
         long total = query.fetchCount();
 
-        return new PageImpl<>(results, pageable, total);
+        return PageResponseDTO.<ProductListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
     }
-
 }
