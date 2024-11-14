@@ -4,15 +4,17 @@ package org.zerock.cleanaido_customer_back.product.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.zerock.cleanaido_customer_back.cart.service.CartService;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.common.dto.SearchDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
-import org.zerock.cleanaido_customer_back.product.entity.Product;
 import org.zerock.cleanaido_customer_back.product.service.ProductService;
+
 
 @RestController
 @Log4j2
@@ -23,6 +25,7 @@ import org.zerock.cleanaido_customer_back.product.service.ProductService;
 public class ProductController {
 
     private final ProductService productService;
+    private final CartService cartService;
 
     //    @CrossOrigin(origins = "http://localhost:5177")
     @GetMapping("list")
@@ -62,5 +65,12 @@ public class ProductController {
     public ResponseEntity<ProductReadDTO> read(@PathVariable Long pno) {
         ProductReadDTO readDTO = productService.readProduct(pno);
         return ResponseEntity.ok(readDTO);
+    }
+
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Long> register(@RequestParam Long pno) {// 또는 적절한 초기화 코드
+        Long productNumber = cartService.addCartDetail(pno);
+
+        return ResponseEntity.ok(productNumber);
     }
 }
