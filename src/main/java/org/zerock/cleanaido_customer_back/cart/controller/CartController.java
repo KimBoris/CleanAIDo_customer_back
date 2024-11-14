@@ -3,10 +3,7 @@ package org.zerock.cleanaido_customer_back.cart.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.zerock.cleanaido_customer_back.cart.dto.CartDetailDTO;
 import org.zerock.cleanaido_customer_back.cart.service.CartService;
 
@@ -22,9 +19,11 @@ public class CartController {
     private final CartService cartService;
 
     @GetMapping("list")
-    public ResponseEntity<List<CartDetailDTO>> list() {
-
-        String customerId = "customer0@aaa.com";
+    public ResponseEntity<List<CartDetailDTO>> list(
+            @RequestParam(value = "customerId", required = false) String customerId
+    ) {
+        log.info("-----kkkkkkkkkkkkkk-------");
+        log.info(customerId);
         return ResponseEntity.ok(cartService.listCartDetail(customerId));
     }
 }

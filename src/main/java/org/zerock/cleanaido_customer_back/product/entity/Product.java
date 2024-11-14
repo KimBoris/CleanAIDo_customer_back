@@ -59,8 +59,8 @@ public class Product {
     @Builder.Default
     private Set<ImageFiles> imageFiles = new HashSet<>();
 
-    public void addImageFile(String filename, boolean type) {
-        imageFiles.add(new ImageFiles(imageFiles.size(), filename, type));
+    public void addImageFile(String fileName, boolean type) {
+        imageFiles.add(new ImageFiles(imageFiles.size(), fileName, type));
     }
 
     public void clearImageFiles() {
