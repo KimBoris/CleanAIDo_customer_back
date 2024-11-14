@@ -55,10 +55,6 @@ public class Product {
     @Column(name = "user_id")
     private String sellerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_number")
-    private Category category;
-
     @ElementCollection
     @Builder.Default
     private Set<ImageFiles> imageFiles = new HashSet<>();
