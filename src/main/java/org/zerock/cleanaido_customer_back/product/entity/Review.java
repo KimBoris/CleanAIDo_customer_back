@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.zerock.cleanaido_customer_back.customer.entity.Customer;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -24,7 +27,8 @@ public class Review {
     private String reviewContent;
 
     @Column(name = "delFleg")
-    private boolean delFlag;
+    @Builder.Default
+    private boolean delFlag = false;
 
     @CreationTimestamp
     @Column(name = "create_date", updatable = false)
@@ -34,9 +38,25 @@ public class Review {
     @Column(name = "updated_date")
     private LocalDateTime updateDate;
 
-    @Column(name = "score")
+    @Column(name = "score", nullable = false)
     private int score;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Customer customer;
+
+    @ElementCollection
+    @Builder.Default
+    private Set<ReviewImage> reviewImages = new HashSet<>();
+
+    public void addReviewImage(String filename) {
+        reviewImages.add(new ReviewImage(reviewImages.size(), filename));
+    }
+
+    public void clearReviewImages() {
+        reviewImages.clear();
+    }
+
 }
