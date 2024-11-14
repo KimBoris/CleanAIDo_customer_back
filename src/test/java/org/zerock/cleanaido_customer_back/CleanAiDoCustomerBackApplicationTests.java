@@ -45,7 +45,7 @@ class CleanAiDoCustomerBackApplicationTests {
         for (int i = 1; i <= 100; i++) {
             Order order = Order.builder()
                     .orderNumber((long) (200 + i))
-                    .customerId("user" + i)
+//                    .customerId("user" + i)
                     .phoneNumber("010-5678-123" + i % 10)
                     .deliveryAddress("서울특별시 강남구 " + i)
                     .deliveryMessage("부재 시 문 앞에 놔주세요.")
@@ -53,7 +53,7 @@ class CleanAiDoCustomerBackApplicationTests {
                     .trackingNumber("TRACK" + i)
                     .orderStatus(statuses[i % statuses.length])
                     .orderDate(LocalDateTime.now())
-                    .productNumber((long) i) // productNumber 값 추가
+//                    .productNumber((long) i) // productNumber 값 추가
                     .build();
 
             orderRepository.save(order);
