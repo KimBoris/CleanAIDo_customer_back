@@ -141,6 +141,8 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         query.where(category.cname.like("%" + keyword + "%"));
         query.orderBy(product.pno.desc());
 
+
+
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
 
 
@@ -155,6 +157,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 product.price,
                                 product.pstatus,
                                 imageFile.fileName.as("fileName")
+//                                productCategory.category.cname.like("%" + keyword + "%")
                         )
                 );
         List<ProductListDTO> dtoList = results.fetch();
