@@ -57,10 +57,10 @@ public class Product {
 
     @ElementCollection
     @Builder.Default
-    private Set<ImageFiles> imageFiles = new HashSet<>();
+    private Set<ImageFile> imageFiles = new HashSet<>();
 
     public void addImageFile(String fileName, boolean type) {
-        imageFiles.add(new ImageFiles(imageFiles.size(), fileName, type));
+        imageFiles.add(new ImageFile(imageFiles.size(), fileName, type));
     }
 
     public void clearImageFiles() {
@@ -69,10 +69,10 @@ public class Product {
 
     @ElementCollection
     @Builder.Default
-    private Set<UsageImageFiles> usageImageFiles = new HashSet<>();
+    private Set<UsageImageFile> usageImageFiles = new HashSet<>();
 
     public void addUsingImageFile(String filename) {
-        usageImageFiles.add(new UsageImageFiles(imageFiles.size(), filename));
+        usageImageFiles.add(new UsageImageFile(imageFiles.size(), filename));
     }
 
     public void clearUsageImageFile() {

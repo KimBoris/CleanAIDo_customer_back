@@ -4,7 +4,6 @@ package org.zerock.cleanaido_customer_back.product.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,7 @@ import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
-import org.zerock.cleanaido_customer_back.product.entity.ImageFiles;
+import org.zerock.cleanaido_customer_back.product.entity.ImageFile;
 import org.zerock.cleanaido_customer_back.product.entity.Product;
 import org.zerock.cleanaido_customer_back.product.repository.ProductRepository;
 
@@ -50,7 +49,7 @@ public class ProductService {
         }
 
         List<String> fileNames = product.getImageFiles().stream()
-                .map(ImageFiles::getFileName)
+                .map(ImageFile::getFileName)
                 .collect(Collectors.toList());
 
         return ProductReadDTO.builder()
