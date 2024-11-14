@@ -1,6 +1,7 @@
 package org.zerock.cleanaido_customer_back.product.repository.search;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
@@ -11,6 +12,9 @@ public interface ProductSearch {
 
     PageResponseDTO<ProductListDTO> list(PageRequestDTO pageRequestDTO);
 
-    Page<Product> searchBy(String type, String keyword, Pageable pageable);
+    PageResponseDTO<ProductListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO<ProductListDTO> searchByCategory(String type, String keyword, PageRequestDTO pageRequestDTO);
+
 
 }
