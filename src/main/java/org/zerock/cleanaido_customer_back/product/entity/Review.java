@@ -23,7 +23,7 @@ public class Review {
     @Column(name = "review_number", unique = true, nullable = false)
     private Long reviewNumber;
 
-    @Column(name = "category_name", nullable = false, length = 1000)
+    @Column(name = "review_content", nullable = false, length = 1000)
     private String reviewContent;
 
     @Column(name = "delFleg")
