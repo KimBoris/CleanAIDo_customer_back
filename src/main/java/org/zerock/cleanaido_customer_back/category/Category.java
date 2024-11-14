@@ -1,6 +1,5 @@
-package org.zerock.cleanaido_customer_back.product.entity;
+package org.zerock.cleanaido_customer_back.category;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 

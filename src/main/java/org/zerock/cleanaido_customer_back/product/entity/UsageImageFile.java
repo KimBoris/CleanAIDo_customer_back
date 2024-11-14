@@ -11,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Embeddable
-public class UsageImageFiles {
+public class UsageImageFile {
     private int ord;
-    private String filename;
+    private String fileName;
 }
