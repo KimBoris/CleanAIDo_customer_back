@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Getter
+@Embeddable
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Embeddable
-public class UsageImageFiles {
+@Getter
+public class ReviewImage {
     private int ord;
-    private String filename;
+    private String fileName;
 }

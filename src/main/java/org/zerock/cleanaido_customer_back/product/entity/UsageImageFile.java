@@ -1,20 +1,17 @@
 package org.zerock.cleanaido_customer_back.product.entity;
 
-
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Embeddable
-@ToString
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-public class ImageFiles {
-
+@ToString
+@Embeddable
+public class UsageImageFile {
     private int ord;
     private String fileName;
-    private boolean type;
 }
