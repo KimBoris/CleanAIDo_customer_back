@@ -81,8 +81,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 .or(product.pname.like("%" + keyword + "%"))
                 .or(product.ptags.like("%" + keyword + "%"));
 
-        query.where(builder);
-
+        query.where(builder).distinct();
         query.orderBy(product.pno.desc());
 
 
