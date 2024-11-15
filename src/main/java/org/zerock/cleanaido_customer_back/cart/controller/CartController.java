@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/v1/cart")
 @Log4j2
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5174")
 public class CartController {
 
     private final CartService cartService;
@@ -25,5 +25,12 @@ public class CartController {
         log.info("-----kkkkkkkkkkkkkk-------");
         log.info(customerId);
         return ResponseEntity.ok(cartService.listCartDetail(customerId));
+    }
+
+    @DeleteMapping("")
+    public Long cdno(
+            @RequestParam(value = "cdno", required = false) Long cdno
+    ){
+        return cartService.deleteCartDetail(cdno);
     }
 }

@@ -51,4 +51,11 @@ public class CartService {
 
         return pno;
     }
+
+    public Long deleteCartDetail(Long id){
+
+        cartDetailRepository.deleteById(id);
+
+        return id;
+    }
 }
