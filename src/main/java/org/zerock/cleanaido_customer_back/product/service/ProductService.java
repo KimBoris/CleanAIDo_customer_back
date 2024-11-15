@@ -57,7 +57,7 @@ public class ProductService {
                 .pname(product.getPname())
                 .price(product.getPrice())
                 .pstatus(product.getPstatus())
-                .filename(fileNames)
+                .fileName(fileNames)
                 .build();
     }
     public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
@@ -69,7 +69,6 @@ public class ProductService {
         PageResponseDTO<ProductListDTO> resultPage = productRepository.searchBy(type, keyword,pageRequestDTO);
 
         List<ProductListDTO> dtoList = resultPage.getDtoList().stream()
-//                .filter(product-> product.getCategory() != null)
                 .map(product -> ProductListDTO.builder()
                         .pno(product.getPno())
                         .pname(product.getPname())
