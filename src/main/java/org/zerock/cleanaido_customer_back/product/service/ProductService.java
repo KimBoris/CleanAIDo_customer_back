@@ -60,8 +60,30 @@ public class ProductService {
                 .filename(fileNames)
                 .build();
     }
-
     public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
+        String type = pageRequestDTO.getSearchDTO().getSearchType();
+        String keyword = pageRequestDTO.getSearchDTO().getKeyword();
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+
+        PageResponseDTO<ProductListDTO> resultPage = productRepository.searchBy(type, keyword,pageRequestDTO);
+
+        List<ProductListDTO> dtoList = resultPage.getDtoList().stream()
+//                .filter(product-> product.getCategory() != null)
+                .map(product -> ProductListDTO.builder()
+                        .pno(product.getPno())
+                        .pname(product.getPname())
+                        .price(product.getPrice())
+                        .pstatus(product.getPstatus())
+                        .build()).collect(Collectors.toList());
+
+        log.info("-0-0-0-0-0-0-0-0-0-0");
+        log.info(pageable);
+        log.info(dtoList);
+        return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalPage());
+    }
+
+    public PageResponseDTO<ProductListDTO> searchCategory(PageRequestDTO pageRequestDTO) {
         String type = pageRequestDTO.getSearchDTO().getSearchType();
         String keyword = pageRequestDTO.getSearchDTO().getKeyword();
 
@@ -76,7 +98,6 @@ public class ProductService {
                         .pname(product.getPname())
                         .price(product.getPrice())
                         .pstatus(product.getPstatus())
-//                        .category(product.getCategory().getCname())
                         .build()).collect(Collectors.toList());
 
         log.info("-0-0-0-0-0-0-0-0-0-0");
