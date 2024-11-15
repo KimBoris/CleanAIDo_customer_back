@@ -36,14 +36,14 @@ public class ReviewService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
 
-    public PageResponseDTO<ReviewListDTO> listReviews(PageRequestDTO pageRequestDTO, Long pno) {
+    public PageResponseDTO<ReviewListDTO> listReviewsByProduct(PageRequestDTO pageRequestDTO, Long pno) {
 
         if (pageRequestDTO.getPage() < 1) {
             throw new IllegalArgumentException("페이지 번호는 1이상 이어야 합니다.");
         }
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
-        PageResponseDTO<ReviewListDTO> response = reviewRepository.list(pageRequestDTO, pno);
+        PageResponseDTO<ReviewListDTO> response = reviewRepository.listByProduct(pageRequestDTO, pno);
 
         return response;
 

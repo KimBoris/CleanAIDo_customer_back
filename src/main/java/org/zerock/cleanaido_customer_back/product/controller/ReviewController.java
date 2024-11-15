@@ -9,13 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
-import org.zerock.cleanaido_customer_back.common.dto.SearchDTO;
 import org.zerock.cleanaido_customer_back.common.dto.UploadDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ReviewListDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ReviewRegisterDTO;
 import org.zerock.cleanaido_customer_back.product.service.ReviewService;
-
-import java.util.List;
 
 @RestController
 @Log4j2
@@ -38,7 +35,7 @@ public class ReviewController {
                 .size(size)
                 .build();
 
-        return ResponseEntity.ok(reviewService.listReviews(pageRequestDTO, pno));
+        return ResponseEntity.ok(reviewService.listReviewsByProduct(pageRequestDTO, pno));
     }
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -6,6 +6,6 @@ import org.zerock.cleanaido_customer_back.product.dto.ReviewListDTO;
 
 public interface ReviewSearch {
 
-    PageResponseDTO<ReviewListDTO> list(PageRequestDTO pageRequestDTO, Long pno);
+    PageResponseDTO<ReviewListDTO> listByProduct(PageRequestDTO pageRequestDTO, Long pno);
 
 }
