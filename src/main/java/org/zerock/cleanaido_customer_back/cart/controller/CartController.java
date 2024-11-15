@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/v1/cart")
 @Log4j2
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = {"http://localhost:5173","http://localhost:5174"})
 public class CartController {
 
     private final CartService cartService;
