@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,9 +16,9 @@ public class ReviewListDTO {
 
     private Long reviewNumber;
     private String reviewContent;
-    private LocalDateTime createdDate;
+    private LocalDateTime createDate;
     private int score;
-    private String fileName;
+    private List<String> fileNames;
     private String customerName;
 
 }

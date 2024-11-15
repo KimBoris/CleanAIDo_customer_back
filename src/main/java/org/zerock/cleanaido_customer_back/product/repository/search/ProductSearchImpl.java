@@ -18,6 +18,8 @@ import org.zerock.cleanaido_customer_back.product.entity.*;
 
 import java.util.List;
 
+import static org.zerock.cleanaido_customer_back.category.entity.QCategory.category;
+
 @Log4j2
 public class ProductSearchImpl extends QuerydslRepositorySupport implements ProductSearch {
     public ProductSearchImpl() {
@@ -29,6 +31,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
         QProduct product = QProduct.product;
         QImageFile imageFile = QImageFile.imageFile;
+        QProductCategory productCategory = QProductCategory.productCategory;
 
         JPQLQuery<Product> query = from(product);
         query.leftJoin(product.imageFiles, imageFile).on(imageFile.ord.eq(0));
@@ -49,6 +52,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 imageFile.fileName
                         )
                 );
+
         List<ProductListDTO> dtoList = results.fetch();
 
         long total = query.fetchCount();
@@ -63,42 +67,27 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
     @Override
     public PageResponseDTO<ProductListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO) {
-
         QProduct product = QProduct.product;
         QProductCategory productCategory = QProductCategory.productCategory;
-        QCategory category = QCategory.category;
         QImageFile imageFile = QImageFile.imageFile;
-
-        log.info("-----------------");
-        log.info("Search Start." + keyword);
-
-        BooleanBuilder builder = new BooleanBuilder();
-
-        // 검색 조건 분기 처리
-
-
-        log.info("-----------------------");
-        log.info(builder);
+        QCategory category = QCategory.category;
 
         JPQLQuery<Product> query = from(product);
         query.leftJoin(product.imageFiles, imageFile).on(imageFile.ord.eq(0));
         query.leftJoin(productCategory).on(product.pno.eq(productCategory.product.pno));
-        query.leftJoin(productCategory).on(category.cno.eq(productCategory.category.cno));
+        query.leftJoin(category).on(productCategory.category.cno.eq(category.cno));
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.or(category.cname.like("%" + keyword + "%"))
+                .or(product.pname.like("%" + keyword + "%"))
+                .or(product.ptags.like("%" + keyword + "%"));
+
+        query.where(builder).distinct();
         query.orderBy(product.pno.desc());
 
 
 
-
-        if (keyword != null && !keyword.isEmpty()) {
-            builder.or(product.pname.containsIgnoreCase(keyword));
-            builder.or(product.ptags.containsIgnoreCase(keyword));
-            builder.or(productCategory.category.cname.containsIgnoreCase(keyword));
-//                builder.or(category.cname.containsIgnoreCase(keyword));
-
-        }
-
-
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+
 
         getQuerydsl().applyPagination(pageable, query);
 
@@ -113,7 +102,10 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 imageFile.fileName.as("fileName")
                         )
                 );
+
+
         List<ProductListDTO> dtoList = results.fetch();
+        log.info(results);
 
         long total = query.fetchCount();
 
@@ -122,9 +114,74 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 .totalCount(total)
                 .pageRequestDTO(pageRequestDTO)
                 .build();
-
-
     }
+
+
+    //    @Override
+//    public PageResponseDTO<ProductListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO) {
+//
+//        QProduct product = QProduct.product;
+//        QProductCategory productCategory = QProductCategory.productCategory;
+//        QCategory category = QCategory.category;
+//        QImageFile imageFile = QImageFile.imageFile;
+//
+//        log.info("-----------------");
+//        log.info("Search Start." + keyword);
+//
+//        BooleanBuilder builder = new BooleanBuilder();
+//
+//        // 검색 조건 분기 처리
+//
+//
+//        log.info("-----------------------");
+//        log.info(builder);
+//
+//        JPQLQuery<Product> query = from(product);
+//        query.leftJoin(product.imageFiles, imageFile).on(imageFile.ord.eq(0));
+//        query.leftJoin(productCategory).on(product.pno.eq(productCategory.product.pno));
+//        query.leftJoin(productCategory).on(category.cno.eq(productCategory.category.cno));
+//        query.orderBy(product.pno.desc());
+//
+//
+//
+//
+//        if (keyword != null && !keyword.isEmpty()) {
+//            builder.or(product.pname.containsIgnoreCase(keyword));
+//            builder.or(product.ptags.containsIgnoreCase(keyword));
+//            builder.or(productCategory.category.cname.containsIgnoreCase(keyword));
+////                builder.or(category.cname.containsIgnoreCase(keyword));
+//
+//        }
+//
+//
+//        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+//
+//        getQuerydsl().applyPagination(pageable, query);
+//
+//        JPQLQuery<ProductListDTO> results =
+//                query.select(
+//                        Projections.bean(
+//                                ProductListDTO.class,
+//                                product.pno,
+//                                product.pname,
+//                                product.price,
+//                                product.pstatus,
+//                                imageFile.fileName.as("fileName")
+//                        )
+//                );
+//
+//        List<ProductListDTO> dtoList = results.fetch();
+//
+//        long total = query.fetchCount();
+//
+//        return PageResponseDTO.<ProductListDTO>withAll()
+//                .dtoList(dtoList)
+//                .totalCount(total)
+//                .pageRequestDTO(pageRequestDTO)
+//                .build();
+//
+//
+//    }
 
 
     @Override
@@ -157,11 +214,12 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 product.price,
                                 product.pstatus,
                                 imageFile.fileName.as("fileName")
-//                                productCategory.category.cname.like("%" + keyword + "%")
                         )
                 );
-        List<ProductListDTO> dtoList = results.fetch();
 
+
+        List<ProductListDTO> dtoList = results.fetch();
+        log.info(results);
 
         long total = query.fetchCount();
 

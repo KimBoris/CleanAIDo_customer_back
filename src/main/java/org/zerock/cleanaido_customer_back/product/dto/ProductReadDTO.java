@@ -18,6 +18,6 @@ public class ProductReadDTO {
     private String pname;
     private int price;
     private String pstatus;
-    private List<String> filename;
+    private List<String> fileName;
 
 }
