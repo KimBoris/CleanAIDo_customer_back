@@ -24,8 +24,8 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @GetMapping("list")
-    public ResponseEntity<PageResponseDTO<ReviewListDTO>> list(
+    @GetMapping("listbyproduct")
+    public ResponseEntity<PageResponseDTO<ReviewListDTO>> listbyproduct(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "pno", required = false) long pno) {
