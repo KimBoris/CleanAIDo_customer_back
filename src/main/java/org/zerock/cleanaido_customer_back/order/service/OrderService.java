@@ -24,6 +24,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
 
+    // 주문 생성 메서드
     public OrderDTO placeOrder(PurchaseDTO purchaseDTO) {
         Customer customer = customerRepository.findByCustomerId(purchaseDTO.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + purchaseDTO.getCustomerId()));
@@ -40,7 +41,6 @@ public class OrderService {
                 .build();
 
         // 주문 상세 정보 추가
-        // 주문 상세 정보 추가
         purchaseDTO.getOrderDetails().forEach(detailDTO -> {
             OrderDetail orderDetail = OrderDetail.builder()
                     .product(Product.builder().pno(detailDTO.getProductId()).build()) // Product 객체를 생성하고 pno 설정
@@ -51,11 +51,11 @@ public class OrderService {
             order.addOrderDetail(orderDetail);
         });
 
-
         Order savedOrder = orderRepository.save(order);
         return new OrderDTO(savedOrder);
     }
 
+    // 고객의 주문 목록을 조회하는 메서드
     public List<OrderDTO> getCustomerOrders(String customerId) {
         Customer customer = customerRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
@@ -66,6 +66,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    // 주문 상태를 업데이트하는 메서드
     public void updateOrderStatus(Long orderNumber, String status) {
         Order order = orderRepository.findById(orderNumber)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderNumber));
