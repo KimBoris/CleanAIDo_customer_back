@@ -14,7 +14,7 @@ public interface ProductSearch {
 
     PageResponseDTO<ProductListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO);
 
-    PageResponseDTO<ProductListDTO> searchByCategory(String type, String keyword, PageRequestDTO pageRequestDTO);
+
 
 
 }
