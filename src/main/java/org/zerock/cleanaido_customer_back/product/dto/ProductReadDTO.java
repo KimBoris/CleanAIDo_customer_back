@@ -30,5 +30,4 @@ public class ProductReadDTO {
     private int price;
     private String pstatus;
     private List<String> fileName;
-    private int quantity;
 }
