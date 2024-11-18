@@ -16,5 +16,5 @@ public class ImageFile {
 
     private int ord;
     private String fileName;
-    private boolean type;
+    private Boolean type;
 }

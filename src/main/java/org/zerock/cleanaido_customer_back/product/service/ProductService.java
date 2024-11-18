@@ -58,11 +58,15 @@ public class ProductService {
                 .price(product.getPrice())
                 .pstatus(product.getPstatus())
                 .fileName(fileNames)
+                .quantity(product.getQuantity())
                 .build();
     }
     public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
         String type = pageRequestDTO.getSearchDTO().getSearchType();
         String keyword = pageRequestDTO.getSearchDTO().getKeyword();
+
+        log.info("=========================================");
+        log.info(type);
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
 
@@ -82,27 +86,27 @@ public class ProductService {
         return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalPage());
     }
 
-    public PageResponseDTO<ProductListDTO> searchCategory(PageRequestDTO pageRequestDTO) {
-        String type = pageRequestDTO.getSearchDTO().getSearchType();
-        String keyword = pageRequestDTO.getSearchDTO().getKeyword();
-
-        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
-
-        PageResponseDTO<ProductListDTO> resultPage = productRepository.searchByCategory(type, keyword,pageRequestDTO);
-
-        List<ProductListDTO> dtoList = resultPage.getDtoList().stream()
-//                .filter(product-> product.getCategory() != null)
-                .map(product -> ProductListDTO.builder()
-                        .pno(product.getPno())
-                        .pname(product.getPname())
-                        .price(product.getPrice())
-                        .pstatus(product.getPstatus())
-                        .build()).collect(Collectors.toList());
-
-        log.info("-0-0-0-0-0-0-0-0-0-0");
-        log.info(pageable);
-        log.info(dtoList);
-        return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalPage());
-    }
+//    public PageResponseDTO<ProductListDTO> searchCategory(PageRequestDTO pageRequestDTO) {
+//        String type = pageRequestDTO.getSearchDTO().getSearchType();
+//        String keyword = pageRequestDTO.getSearchDTO().getKeyword();
+//
+//        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+//
+//        PageResponseDTO<ProductListDTO> resultPage = productRepository.searchByCategory(type, keyword,pageRequestDTO);
+//
+//        List<ProductListDTO> dtoList = resultPage.getDtoList().stream()
+////                .filter(product-> product.getCategory() != null)
+//                .map(product -> ProductListDTO.builder()
+//                        .pno(product.getPno())
+//                        .pname(product.getPname())
+//                        .price(product.getPrice())
+//                        .pstatus(product.getPstatus())
+//                        .build()).collect(Collectors.toList());
+//
+//        log.info("-0-0-0-0-0-0-0-0-0-0");
+//        log.info(pageable);
+//        log.info(dtoList);
+//        return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalPage());
+//    }
 
 }
