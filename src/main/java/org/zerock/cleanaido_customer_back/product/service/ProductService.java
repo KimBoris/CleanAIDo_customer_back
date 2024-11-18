@@ -58,7 +58,6 @@ public class ProductService {
                 .price(product.getPrice())
                 .pstatus(product.getPstatus())
                 .fileName(fileNames)
-                .quantity(product.getQuantity())
                 .build();
     }
     public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
