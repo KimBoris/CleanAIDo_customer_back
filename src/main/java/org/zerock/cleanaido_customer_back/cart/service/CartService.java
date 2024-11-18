@@ -22,7 +22,6 @@ public class CartService {
 
     public List<CartDetailDTO> listCartDetail(String customerId){
 
-        log.info("--------------");
         log.info("---service start---");
 
         return cartDetailRepository.list(customerId);
