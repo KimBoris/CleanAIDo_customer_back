@@ -58,4 +58,18 @@ public class CartService {
 
         return id;
     }
+
+    public Long updateQty(Long cdno, int qty) {
+        // 원하는 cart detail을 찾기 위해 cdno로 조회
+        CartDetail cartDetail = cartDetailRepository.findById(cdno)
+                .orElseThrow(() -> new IllegalArgumentException("해당 cdno에 대한 내역이 없습니다: " + cdno));
+
+        // 수량 업데이트
+        cartDetail.setQuantity(qty);
+
+        // 변경 사항 저장
+        cartDetailRepository.save(cartDetail);
+
+        return cdno;
+    }
 }
