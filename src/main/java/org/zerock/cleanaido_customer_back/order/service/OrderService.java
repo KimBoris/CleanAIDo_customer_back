@@ -11,6 +11,7 @@ import org.zerock.cleanaido_customer_back.order.entity.Order;
 import org.zerock.cleanaido_customer_back.order.entity.OrderDetail;
 import org.zerock.cleanaido_customer_back.order.repository.OrderRepository;
 import org.zerock.cleanaido_customer_back.product.entity.Product;
+import org.zerock.cleanaido_customer_back.product.repository.ProductRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +24,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
+    private final ProductRepository productRepository;
 
     public OrderDTO placeOrder(PurchaseDTO purchaseDTO) {
         // 고객 ID로 조회
@@ -31,7 +33,7 @@ public class OrderService {
 
         // 주문 생성
         Order order = Order.builder()
-                .customer(customer) // 고객 정보 설정
+                .customer(customer)
                 .phoneNumber(purchaseDTO.getPhoneNumber())
                 .deliveryAddress(purchaseDTO.getDeliveryAddress())
                 .deliveryMessage(purchaseDTO.getDeliveryMessage())
@@ -42,8 +44,12 @@ public class OrderService {
 
         // 주문 상세 정보 추가
         purchaseDTO.getOrderDetails().forEach(detailDTO -> {
+            // Product 유효성 확인
+            Product product = productRepository.findById(detailDTO.getProductId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid Product ID: " + detailDTO.getProductId()));
+
             OrderDetail orderDetail = OrderDetail.builder()
-                    .product(Product.builder().pno(detailDTO.getProductId()).build())
+                    .product(product) // 유효한 Product 객체 사용
                     .quantity(detailDTO.getQuantity())
                     .price(detailDTO.getPrice())
                     .build();
@@ -55,9 +61,10 @@ public class OrderService {
 
         // 고객 이름 포함하여 반환
         OrderDTO orderDTO = new OrderDTO(savedOrder);
-        orderDTO.setCustomerName(customer.getCustomerName()); // 고객 이름 추가
+        orderDTO.setCustomerName(customer.getCustomerName());
         return orderDTO;
     }
+
 
 
     // 고객의 주문 목록을 조회하는 메서드
