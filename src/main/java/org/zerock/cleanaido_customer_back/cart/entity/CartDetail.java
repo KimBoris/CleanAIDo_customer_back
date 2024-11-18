@@ -1,10 +1,7 @@
 package org.zerock.cleanaido_customer_back.cart.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.zerock.cleanaido_customer_back.product.entity.Product;
 
 @Entity
@@ -12,6 +9,7 @@ import org.zerock.cleanaido_customer_back.product.entity.Product;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Setter
 public class CartDetail {
 
     @Id
@@ -25,4 +23,5 @@ public class CartDetail {
     private Product product;
 
     private int quantity;
+
 }

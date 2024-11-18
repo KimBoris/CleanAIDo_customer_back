@@ -42,23 +42,22 @@ public class ProductService {
     }
 
     public ProductReadDTO readProduct(Long pno) {
-        Product product = productRepository.getProduct(pno);
+        ProductReadDTO productReadDTO = productRepository.getProduct(pno);
 
-        if (product == null) {
+        if (productReadDTO == null) {
             throw new EntityNotFoundException("게시물을 찾을 수 없습니다." + pno);
         }
 
-        List<String> fileNames = product.getImageFiles().stream()
-                .map(ImageFile::getFileName)
+        List<String> fileNames = productRepository.findById(pno)
+                .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다. pno: " + pno))
+                .getImageFiles().stream()
+                .map(imageFile -> imageFile.getFileName())
                 .collect(Collectors.toList());
 
-        return ProductReadDTO.builder()
-                .pno(product.getPno())
-                .pname(product.getPname())
-                .price(product.getPrice())
-                .pstatus(product.getPstatus())
-                .fileName(fileNames)
-                .build();
+        productReadDTO.setFileName(fileNames);
+
+        return productReadDTO;
+
     }
     public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
         String type = pageRequestDTO.getSearchDTO().getSearchType();

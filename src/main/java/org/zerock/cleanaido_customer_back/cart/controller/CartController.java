@@ -39,6 +39,7 @@ public class CartController {
             @RequestParam(value = "cdno", required = false) Long cdno,
             @RequestParam(value = "quantity", required = false) int quantity
     ){
-        return cdno;
+        log.info("------upadate cart-----------");
+        return cartService.updateQty(cdno, quantity);
     }
 }
