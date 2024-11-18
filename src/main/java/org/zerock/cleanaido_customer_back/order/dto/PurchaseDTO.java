@@ -13,9 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class PurchaseDTO {
     private String customerId;
+    private String customerName;
     private String phoneNumber;
     private String deliveryAddress;
     private String deliveryMessage;
     private int totalPrice;
     private List<OrderDetailDTO> orderDetails;
 }
+

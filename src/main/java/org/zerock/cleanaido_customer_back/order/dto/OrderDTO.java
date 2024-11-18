@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 public class OrderDTO {
 
     private Long orderNumber;
-    private String customerId;
+    private String customerId; // 기존 고객 ID
+    private String customerName; // 추가된 고객 이름
     private String phoneNumber;
     private String deliveryAddress;
     private String deliveryMessage;
@@ -26,9 +27,11 @@ public class OrderDTO {
     private String orderStatus;
     private List<OrderDetailDTO> orderDetails;
 
+    // 수정된 생성자
     public OrderDTO(Order order) {
         this.orderNumber = order.getOrderNumber();
-        this.customerId = order.getCustomer().getCustomerId();
+        this.customerId = order.getCustomer().getCustomerId(); // 고객 ID
+        this.customerName = order.getCustomer().getCustomerName(); // 고객 이름 가져오기
         this.phoneNumber = order.getPhoneNumber();
         this.deliveryAddress = order.getDeliveryAddress();
         this.deliveryMessage = order.getDeliveryMessage();
@@ -40,3 +43,4 @@ public class OrderDTO {
                 .collect(Collectors.toList());
     }
 }
+

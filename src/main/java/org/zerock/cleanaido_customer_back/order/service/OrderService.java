@@ -25,37 +25,42 @@ public class OrderService {
     private final CustomerRepository customerRepository;
 
     public OrderDTO placeOrder(PurchaseDTO purchaseDTO) {
+        // 고객 ID로 조회
         Customer customer = customerRepository.findByCustomerId(purchaseDTO.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + purchaseDTO.getCustomerId()));
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
 
-        // 프론트에서 계산된 총 가격 사용
+        // 주문 생성
         Order order = Order.builder()
-                .customer(customer)
+                .customer(customer) // 고객 정보 설정
                 .phoneNumber(purchaseDTO.getPhoneNumber())
                 .deliveryAddress(purchaseDTO.getDeliveryAddress())
                 .deliveryMessage(purchaseDTO.getDeliveryMessage())
                 .orderDate(LocalDateTime.now())
                 .orderStatus("주문 완료")
-                .totalPrice(purchaseDTO.getTotalPrice())  // 프론트에서 전달된 총 가격 사용
+                .totalPrice(purchaseDTO.getTotalPrice())
                 .build();
 
         // 주문 상세 정보 추가
-        // 주문 상세 정보 추가
         purchaseDTO.getOrderDetails().forEach(detailDTO -> {
             OrderDetail orderDetail = OrderDetail.builder()
-                    .product(Product.builder().pno(detailDTO.getProductId()).build()) // Product 객체를 생성하고 pno 설정
+                    .product(Product.builder().pno(detailDTO.getProductId()).build())
                     .quantity(detailDTO.getQuantity())
-                    .price(detailDTO.getPrice())  // 프론트에서 전달된 개별 상품 가격 사용
+                    .price(detailDTO.getPrice())
                     .build();
-
             order.addOrderDetail(orderDetail);
         });
 
-
+        // 주문 저장
         Order savedOrder = orderRepository.save(order);
-        return new OrderDTO(savedOrder);
+
+        // 고객 이름 포함하여 반환
+        OrderDTO orderDTO = new OrderDTO(savedOrder);
+        orderDTO.setCustomerName(customer.getCustomerName()); // 고객 이름 추가
+        return orderDTO;
     }
 
+
+    // 고객의 주문 목록을 조회하는 메서드
     public List<OrderDTO> getCustomerOrders(String customerId) {
         Customer customer = customerRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
@@ -66,6 +71,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    // 주문 상태를 업데이트하는 메서드
     public void updateOrderStatus(Long orderNumber, String status) {
         Order order = orderRepository.findById(orderNumber)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found with ID: " + orderNumber));
