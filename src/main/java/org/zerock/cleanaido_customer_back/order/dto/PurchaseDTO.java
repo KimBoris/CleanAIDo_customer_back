@@ -20,4 +20,3 @@ public class PurchaseDTO {
     private int totalPrice;
     private List<OrderDetailDTO> orderDetails;
 }
-
