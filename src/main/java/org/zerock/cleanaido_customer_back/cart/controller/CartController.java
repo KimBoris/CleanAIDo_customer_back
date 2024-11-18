@@ -28,9 +28,17 @@ public class CartController {
     }
 
     @DeleteMapping("")
-    public Long cdno(
+    public Long delte(
             @RequestParam(value = "cdno", required = false) Long cdno
     ){
         return cartService.deleteCartDetail(cdno);
+    }
+
+    @PutMapping("")
+    public Long update(
+            @RequestParam(value = "cdno", required = false) Long cdno,
+            @RequestParam(value = "quantity", required = false) int quantity
+    ){
+        return cdno;
     }
 }
