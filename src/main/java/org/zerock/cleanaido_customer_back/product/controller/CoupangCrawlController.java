@@ -1,12 +1,12 @@
 package org.zerock.cleanaido_customer_back.product.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.cleanaido_customer_back.product.service.CoupangCrawlService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/crawl")
@@ -16,14 +16,11 @@ public class CoupangCrawlController {
     private final CoupangCrawlService crawlService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<String>> searchProducts(@RequestParam String keyword) {
-        List<String> products = crawlService.searchProducts(keyword);
+    public ResponseEntity<List<Map<String, Object>>> searchProducts(@RequestParam String keyword) {
+        List<Map<String, Object>> products = crawlService.crawlProducts(keyword);
         if (products.isEmpty()) {
-            return ResponseEntity.status(500).body(List.of("Failed to fetch products or no products found."));
+            return ResponseEntity.status(500).body(List.of(Map.of("error", "No products found or failed to fetch.")));
         }
         return ResponseEntity.ok(products);
     }
 }
-
-
-
