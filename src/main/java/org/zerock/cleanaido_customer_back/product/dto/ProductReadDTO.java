@@ -20,9 +20,6 @@ import org.zerock.cleanaido_customer_back.product.entity.QProduct;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class ProductReadDTO {
 
     private Long pno;
@@ -30,4 +27,15 @@ public class ProductReadDTO {
     private int price;
     private String pstatus;
     private List<String> fileName;
+    private Double averageScore;
+    private Long countScore;
+
+    public ProductReadDTO(Long pno, String pname, int price, String pstatus, Double averageScore, Long countScore) {
+        this.pno = pno;
+        this.pname = pname;
+        this.price = price;
+        this.pstatus = pstatus;
+        this.averageScore = averageScore;
+        this.countScore = countScore;
+    }
 }
