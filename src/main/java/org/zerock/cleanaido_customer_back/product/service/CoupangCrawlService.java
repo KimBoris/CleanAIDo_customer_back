@@ -9,20 +9,29 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
+import org.zerock.cleanaido_customer_back.product.entity.ImageFile;
+import org.zerock.cleanaido_customer_back.product.entity.Product;
+import org.zerock.cleanaido_customer_back.product.repository.ProductRepository;
 
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CoupangCrawlService {
 
-    public List<Map<String, Object>> crawlProducts(String keyword) {
-        List<Map<String, Object>> productList = new ArrayList<>();
+    private final ProductRepository productRepository;
 
-        // WebDriver 설정
+    public CoupangCrawlService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public void crawlAndSaveProducts(String keyword) {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-gpu");
@@ -34,53 +43,51 @@ public class CoupangCrawlService {
             String searchUrl = "https://www.coupang.com/np/search?q=" + keyword;
             driver.get(searchUrl);
 
-            // 페이지 로드 대기
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".search-product")));
 
-            // 상품 리스트 크롤링
             List<WebElement> products = driver.findElements(By.cssSelector(".search-product"));
-            for (WebElement product : products) {
+            for (WebElement productElement : products) {
                 try {
-                    // 상품 ID
-                    String productCode = product.getAttribute("id");
-
-                    // 상품명 (img 태그의 alt 속성)
-                    WebElement imgElement = product.findElement(By.cssSelector("img"));
+                    String productCode = productElement.getAttribute("id");
+                    WebElement imgElement = productElement.findElement(By.cssSelector("img"));
                     String productName = imgElement.getAttribute("alt");
-
-                    // 태그 (상품명을 띄어쓰기 기준으로 분리)
                     String[] tags = productName.split(" ");
-
-                    // 상품 가격
-                    String price = product.findElement(By.cssSelector(".price-value")).getText();
-
-                    // 썸네일 이미지 URL
+                    String priceText = productElement.findElement(By.cssSelector(".price-value")).getText();
+                    int price = Integer.parseInt(priceText.replaceAll("[^0-9]", ""));
                     String thumbnailUrl = imgElement.getAttribute("src");
 
-                    // 상품 상세 링크
-                    String productLink = product.findElement(By.cssSelector("a")).getAttribute("href");
+                    // 상세 페이지 이동 후 상세 이미지 크롤링
+                    String productLink = productElement.findElement(By.cssSelector("a")).getAttribute("href");
+                    driver.get(productLink);
+                    Thread.sleep(3000); // 페이지 로드 대기
 
-                    // 임의 데이터
-                    String userId = "user001";
-                    String releaseDate = "2024-11-18";
-                    int stockQuantity = 100;
-                    String status = "판매중";
+                    List<WebElement> detailImages = driver.findElements(By.cssSelector(".product-detail img"));
 
-                    // 크롤링 데이터 저장
-                    Map<String, Object> productData = new HashMap<>();
-                    productData.put("product_code", productCode);
-                    productData.put("product_name", productName);
-                    productData.put("tags", tags);
-                    productData.put("price", price);
-                    productData.put("thumbnail_url", thumbnailUrl);
-                    productData.put("product_link", productLink);
-                    productData.put("user_id", userId);
-                    productData.put("release_date", releaseDate);
-                    productData.put("stock_quantity", stockQuantity);
-                    productData.put("status", status);
+                    // Product 엔티티 생성
+                    Product product = Product.builder()
+                            .pcode(productCode)
+                            .pname(productName)
+                            .ptags(String.join(",", tags))
+                            .price(price)
+                            .sellerId("user001") // 기본 sellerId 설정
+                            .releasedAt(LocalDateTime.now())
+                            .quantity(100) // 임의 수량
+                            .pstatus("판매중")
+                            .build();
 
-                    productList.add(productData);
+                    // 썸네일 이미지 추가
+                    product.addImageFile(thumbnailUrl, false);
+
+                    // 상세 이미지 추가
+                    for (WebElement detailImage : detailImages) {
+                        String detailImageUrl = detailImage.getAttribute("src");
+                        product.addUsingImageFile(detailImageUrl);
+                    }
+
+                    // Product 엔티티 저장
+                    productRepository.save(product);
+
                 } catch (Exception e) {
                     System.err.println("Error processing product: " + e.getMessage());
                 }
@@ -90,7 +97,7 @@ public class CoupangCrawlService {
         } finally {
             driver.quit();
         }
-
-        return productList;
     }
 }
+
+
