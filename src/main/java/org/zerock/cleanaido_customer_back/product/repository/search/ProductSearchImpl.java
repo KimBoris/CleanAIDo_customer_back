@@ -4,8 +4,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -18,8 +16,6 @@ import org.zerock.cleanaido_customer_back.product.entity.*;
 
 import java.util.List;
 
-import static org.zerock.cleanaido_customer_back.category.entity.QCategory.category;
-
 @Log4j2
 public class ProductSearchImpl extends QuerydslRepositorySupport implements ProductSearch {
     public ProductSearchImpl() {
@@ -31,15 +27,22 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
         QProduct product = QProduct.product;
         QImageFile imageFile = QImageFile.imageFile;
-        QProductCategory productCategory = QProductCategory.productCategory;
+        QReview review = QReview.review;
+
 
         JPQLQuery<Product> query = from(product);
         query.leftJoin(product.imageFiles, imageFile).on(imageFile.ord.eq(0));
+        query.leftJoin(review).on(review.product.eq(product));
+        query.groupBy(product);
         query.orderBy(product.pno.desc());
 
-        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+        Pageable pageable =
+                PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
 
         getQuerydsl().applyPagination(pageable, query);
+
+        log.info(review);
+        log.info("********************");
 
         JPQLQuery<ProductListDTO> results =
                 query.select(
@@ -49,11 +52,16 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 product.pname,
                                 product.price,
                                 product.pstatus,
-                                imageFile.fileName
+                                imageFile.fileName,
+                                review.count().as("reviewCount")
                         )
                 );
 
+
         List<ProductListDTO> dtoList = results.fetch();
+
+        log.info("--------------------");
+        log.info(dtoList);
 
         long total = query.fetchCount();
 
@@ -62,7 +70,6 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 totalCount(total).
                 pageRequestDTO(pageRequestDTO).
                 build();
-
     }
 
     @Override

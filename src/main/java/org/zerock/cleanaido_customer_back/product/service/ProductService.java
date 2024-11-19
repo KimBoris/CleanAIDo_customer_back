@@ -76,6 +76,7 @@ public class ProductService {
                         .pname(product.getPname())
                         .price(product.getPrice())
                         .pstatus(product.getPstatus())
+                        .reviewCount(product.getReviewCount())
                         .build()).collect(Collectors.toList());
 
         log.info("-0-0-0-0-0-0-0-0-0-0");
