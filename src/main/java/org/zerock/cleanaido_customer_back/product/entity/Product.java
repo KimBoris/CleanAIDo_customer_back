@@ -77,6 +77,5 @@ public class Product {
 
     public void clearUsageImageFile() {
         usageImageFiles.clear();
-
     }
 }
