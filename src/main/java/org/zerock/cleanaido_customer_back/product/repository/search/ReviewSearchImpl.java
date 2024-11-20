@@ -51,6 +51,7 @@ public class ReviewSearchImpl extends QuerydslRepositorySupport implements Revie
                         .fileNames(r.getReviewImages().stream()
                                 .map(image -> image.getFileName())
                                 .collect(Collectors.toList()))
+                        .customerProfileImg(r.getCustomer().getProfileImageUrl())
                         .build())
                 .collect(Collectors.toList());
 
