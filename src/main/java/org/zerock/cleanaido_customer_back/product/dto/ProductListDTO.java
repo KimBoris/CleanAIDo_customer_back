@@ -17,5 +17,5 @@ public class ProductListDTO {
     private String pstatus;
     private String fileName;
     private Long reviewCount;
-    private Double score;
+    private int score;
 }
