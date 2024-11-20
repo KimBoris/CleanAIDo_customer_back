@@ -16,6 +16,8 @@ import org.zerock.cleanaido_customer_back.product.entity.*;
 
 import java.util.List;
 
+import static com.querydsl.core.group.GroupBy.avg;
+
 @Log4j2
 public class ProductSearchImpl extends QuerydslRepositorySupport implements ProductSearch {
     public ProductSearchImpl() {
@@ -36,13 +38,11 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         query.groupBy(product);
         query.orderBy(product.pno.desc());
 
+
         Pageable pageable =
                 PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
 
         getQuerydsl().applyPagination(pageable, query);
-
-        log.info(review);
-        log.info("********************");
 
         JPQLQuery<ProductListDTO> results =
                 query.select(
@@ -55,7 +55,9 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 imageFile.fileName,
                                 review.count().as("reviewCount")
                         )
+
                 );
+
 
 
         List<ProductListDTO> dtoList = results.fetch();
