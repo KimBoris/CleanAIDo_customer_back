@@ -53,11 +53,11 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                                 product.price,
                                 product.pstatus,
                                 imageFile.fileName,
-                                review.count().as("reviewCount")
+                                review.count().as("reviewCount"),
+                                review.score.avg().round().castToNum(Integer.class).as("score")
                         )
 
                 );
-
 
 
         List<ProductListDTO> dtoList = results.fetch();
