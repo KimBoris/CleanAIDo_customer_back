@@ -20,5 +20,6 @@ public class ReviewListDTO {
     private int score;
     private List<String> fileNames;
     private String customerName;
+    private String customerProfileImg;
 
 }
