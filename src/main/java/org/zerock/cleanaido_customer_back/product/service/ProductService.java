@@ -42,23 +42,26 @@ public class ProductService {
     }
 
     public ProductReadDTO readProduct(Long pno) {
+        // 기본 상품 데이터 가져오기
         ProductReadDTO productReadDTO = productRepository.getProduct(pno);
 
         if (productReadDTO == null) {
-            throw new EntityNotFoundException("게시물을 찾을 수 없습니다." + pno);
+            throw new EntityNotFoundException("상품을 찾을 수 없습니다. pno: " + pno);
         }
 
+        // 상품의 이미지 파일 리스트 가져오기
         List<String> fileNames = productRepository.findById(pno)
                 .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다. pno: " + pno))
                 .getImageFiles().stream()
-                .map(imageFile -> imageFile.getFileName())
+                .map(ImageFile::getFileName) // 이미지 URL만 가져오기
                 .collect(Collectors.toList());
 
+        // DTO에 이미지 리스트 설정
         productReadDTO.setFileName(fileNames);
 
         return productReadDTO;
-
     }
+
     public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
         String type = pageRequestDTO.getSearchDTO().getSearchType();
         String keyword = pageRequestDTO.getSearchDTO().getKeyword();

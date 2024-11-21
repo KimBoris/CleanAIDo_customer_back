@@ -27,7 +27,7 @@ public class ReviewTests {
         for (int i = 1; i <= 10; i++) {
             for (long j = 1; j <= 12; j++) {
                 Product product = Product.builder().pno(j).build();
-                Customer customer = Customer.builder().customerId("customer" + i + "@aaa.com").build();
+                Customer customer = Customer.builder().customerId("customer").build();
                 Review review = Review.builder()
                         .customer(customer)
                         .product(product)
