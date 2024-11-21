@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"imageFiles","usageImageFiles"})
 @Getter
 public class Product {
 
@@ -57,7 +57,12 @@ public class Product {
 
     @ElementCollection
     @Builder.Default
+
     private Set<ImageFile> imageFiles = new HashSet<>();
+
+    @ElementCollection
+    @Builder.Default
+    private Set<UsageImageFile> usageImageFiles = new HashSet<>();
 
     public void addImageFile(String fileName, boolean type) {
         imageFiles.add(new ImageFile(imageFiles.size(), fileName, type));
@@ -67,9 +72,7 @@ public class Product {
         imageFiles.clear();
     }
 
-    @ElementCollection
-    @Builder.Default
-    private Set<UsageImageFile> usageImageFiles = new HashSet<>();
+
 
     public void addUsingImageFile(String filename) {
         usageImageFiles.add(new UsageImageFile(imageFiles.size(), filename));
