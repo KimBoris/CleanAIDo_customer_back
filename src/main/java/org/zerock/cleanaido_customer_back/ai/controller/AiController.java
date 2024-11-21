@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.cleanaido_customer_back.ai.service.AIService;
+import org.zerock.cleanaido_customer_back.common.dto.TempUploadDTO;
 import org.zerock.cleanaido_customer_back.common.dto.UploadDTO;
 
 @RestController
@@ -17,28 +18,34 @@ public class AiController {
 
     private final AIService aiService;
 
-    @GetMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Object getAiAnswer(
-            @ModelAttribute String customerText,
-            @RequestParam("files") MultipartFile[] files
-    ) {
+//    @GetMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public Object getAiAnswer(
+//            @ModelAttribute String customerText,
+//            @RequestParam("files") MultipartFile[] files
+//    ) {
+//
+//        UploadDTO uploadDTO = new UploadDTO(files, null);
+//        return null;
+//    }
 
-        UploadDTO uploadDTO = new UploadDTO(files, null);
-        return null;
-    }
-
-    @GetMapping(value = "solution")
+    @GetMapping(value = "solution", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Object getSolution(
-            @RequestParam String imageTitle
-
+            @RequestParam MultipartFile imageFile,
+            @ModelAttribute String customerText
     ) throws Exception {
+
+        TempUploadDTO tempUploadDTO = new TempUploadDTO(imageFile, null);
+        String imageTitle = aiService.registImg(tempUploadDTO);
+
         log.info("---------------------");
         log.info("imageTitle: "+imageTitle);
         String[] extractedImages = aiService.getImagelist(imageTitle);
 
         String extractedCategory = aiService.getCategory(extractedImages);
 
-        String question = extractedCategory + " 모기를 잡고 싶어";
+        String question = extractedCategory + customerText;
+
+        aiService.deleteTempImg(imageTitle);
 
         return aiService.getSolution(question);
     }

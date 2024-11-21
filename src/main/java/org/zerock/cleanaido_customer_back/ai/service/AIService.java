@@ -8,8 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.zerock.cleanaido_customer_back.ai.repository.AIRepository;
+import org.zerock.cleanaido_customer_back.common.dto.TempUploadDTO;
+import org.zerock.cleanaido_customer_back.common.dto.UploadDTO;
+import org.zerock.cleanaido_customer_back.common.util.CustomFileUtil;
 
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -18,6 +22,7 @@ import java.util.Map;
 public class AIService {
 
     private final AIRepository aiRepository;
+    private final CustomFileUtil customFileUtil;
 
     public String[] getImagelist(String imageTitle) throws Exception {
 
@@ -98,5 +103,19 @@ public class AIService {
             throw new RuntimeException("Failed to call Python server");
         }
 
+    }
+    public String registImg(TempUploadDTO tempUploadDTO) {
+
+        // 파일이 있는 경우에만 처리
+        String imageFileName = Optional.ofNullable(tempUploadDTO.getFile())
+                .filter(file -> !file.isEmpty()) // 실제 파일이 있는 경우만 처리
+                .map(customFileUtil::saveFile) // 유효한 파일이 있으면 저장
+                .orElse(null); // 파일이 없으면 null 반환
+
+        return imageFileName; // 저장된 파일 이름 반환
+    }
+
+    public void deleteTempImg(String imageFileName) {
+        customFileUtil.deleteFile(imageFileName);
     }
 }
