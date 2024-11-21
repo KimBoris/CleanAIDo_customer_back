@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.zerock.cleanaido_customer_back.ai.dto.SolutionDTO;
 import org.zerock.cleanaido_customer_back.ai.service.AIService;
 import org.zerock.cleanaido_customer_back.common.dto.TempUploadDTO;
 import org.zerock.cleanaido_customer_back.common.dto.UploadDTO;
@@ -18,21 +19,13 @@ public class AiController {
 
     private final AIService aiService;
 
-//    @GetMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public Object getAiAnswer(
-//            @ModelAttribute String customerText,
-//            @RequestParam("files") MultipartFile[] files
-//    ) {
-//
-//        UploadDTO uploadDTO = new UploadDTO(files, null);
-//        return null;
-//    }
 
-    @GetMapping(value = "solution", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "solution", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Object getSolution(
             @RequestParam MultipartFile imageFile,
-            @ModelAttribute String customerText
+            @RequestParam String customerText
     ) throws Exception {
+        log.info("----------------getSolution Start");
 
         TempUploadDTO tempUploadDTO = new TempUploadDTO(imageFile, null);
         String imageTitle = aiService.registImg(tempUploadDTO);
@@ -47,6 +40,8 @@ public class AiController {
 
         aiService.deleteTempImg(imageTitle);
 
-        return aiService.getSolution(question);
+        String solution = aiService.getSolution(question);
+
+        return new SolutionDTO(extractedCategory, solution);
     }
 }
