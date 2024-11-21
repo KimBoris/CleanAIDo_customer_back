@@ -28,7 +28,7 @@ public class CartController {
     }
 
     @DeleteMapping("")
-    public Long delte(
+    public Long delete(
             @RequestParam(value = "cdno", required = false) Long cdno
     ){
         return cartService.deleteCartDetail(cdno);

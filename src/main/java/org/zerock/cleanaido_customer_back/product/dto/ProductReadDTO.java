@@ -17,6 +17,7 @@ import org.zerock.cleanaido_customer_back.product.entity.Product;
 import org.zerock.cleanaido_customer_back.product.entity.QImageFile;
 import org.zerock.cleanaido_customer_back.product.entity.QProduct;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,16 +27,30 @@ public class ProductReadDTO {
     private String pname;
     private int price;
     private String pstatus;
-    private List<String> fileName;
+    private List<String> thumFileNames;
+    private List<String> detailFileNames;
     private Double averageScore;
     private Long countScore;
 
-    public ProductReadDTO(Long pno, String pname, int price, String pstatus, Double averageScore, Long countScore) {
-        this.pno = pno;
-        this.pname = pname;
-        this.price = price;
-        this.pstatus = pstatus;
-        this.averageScore = averageScore;
-        this.countScore = countScore;
+
+    public ProductReadDTO(Product product, long revivewCnt, double rscore) {
+        this.pno = product.getPno();
+        this.pname = product.getPname();
+        this.price = product.getPrice();
+        this.pstatus = product.getPstatus();
+
+        List<String> thumFileNames =
+                product.getImageFiles().stream().filter(imageFile -> imageFile.getType() == false).map(imageFile -> imageFile.getFileName()).toList();
+
+
+        List<String> detailFileNames =
+                product.getImageFiles().stream().filter(imageFile -> imageFile.getType() == true).map(imageFile -> imageFile.getFileName()).toList();
+
+
+        this.thumFileNames = thumFileNames;
+        this.detailFileNames = detailFileNames;
+
+        this.countScore = revivewCnt;
+        this.averageScore = rscore;
     }
 }

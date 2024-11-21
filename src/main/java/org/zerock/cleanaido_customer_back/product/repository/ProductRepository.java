@@ -11,17 +11,18 @@ import org.zerock.cleanaido_customer_back.product.repository.search.ProductSearc
 public interface ProductRepository
         extends JpaRepository<Product, Long>, ProductSearch {
 
-    @EntityGraph(attributePaths = "imageFiles")
+
     @Query("""
-            SELECT new org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO(
-                 p.pno, p.pname, p.price, p.pstatus, avg(r.score), count(r)
-             )
-            FROM Product p
-            LEFT JOIN Review r on r.product = p
-            WHERE p.pno = :pno
-            GROUP BY p
+      select 
+       new org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO(
+        p, count(distinct (r)),  avg(distinct (r.score))
+       )
+      from Product p left join Review r on r.product = p     
+      where p.pno = :pno 
+      group by p 
            """)
     ProductReadDTO getProduct(@Param("pno") Long pno);
+
 
     boolean existsByPcode(String pcode);
 }
