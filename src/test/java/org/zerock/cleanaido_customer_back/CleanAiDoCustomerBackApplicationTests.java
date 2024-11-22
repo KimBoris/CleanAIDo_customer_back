@@ -95,8 +95,8 @@ class CleanAiDoCustomerBackApplicationTests {
         CustomerListDTO dto = new CustomerListDTO();
         IntStream.rangeClosed(0, 20).forEach(i -> {
             Customer customer = Customer.builder()
-                    .customerId("Customer1")
-                    .customerName("Customer")
+                    .customerId("customer0@aaa.com")
+                    .customerName("Customer0")
                     .customerPw("1111")
                     .birthDate(LocalDate.now())
                     .createDate(Timestamp.valueOf(now()))
