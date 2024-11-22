@@ -57,7 +57,6 @@ public class Product {
 
     @ElementCollection
     @Builder.Default
-
     private Set<ImageFile> imageFiles = new HashSet<>();
 
     @ElementCollection
