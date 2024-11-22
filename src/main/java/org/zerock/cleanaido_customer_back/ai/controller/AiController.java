@@ -32,12 +32,16 @@ public class AiController {
 
         log.info("---------------------");
         log.info("imageTitle: "+imageTitle);
+        
+        //유사 이미지 추출
         String[] extractedImages = aiService.getImagelist(imageTitle);
 
+        //카테고리 추출
         String extractedCategory = aiService.getCategory(extractedImages);
-
+        
         String question = extractedCategory + customerText;
 
+        //지피티에게 답변받기
         aiService.deleteTempImg(imageTitle);
 
         String solution = aiService.getSolution(question);
