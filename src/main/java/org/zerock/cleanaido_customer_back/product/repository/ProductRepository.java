@@ -15,7 +15,7 @@ public interface ProductRepository
     @Query("""
       select 
        new org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO(
-        p, count(distinct (r)),  avg(distinct (r.score))
+        p, count(distinct r),  coalesce(avg(distinct r.score), 0.0)
        )
       from Product p left join Review r on r.product = p     
       where p.pno = :pno 

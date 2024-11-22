@@ -33,7 +33,7 @@ public class ProductReadDTO {
     private Long countScore;
 
 
-    public ProductReadDTO(Product product, long revivewCnt, double rscore) {
+    public ProductReadDTO(Product product, long reviewCnt, double rscore) {
         this.pno = product.getPno();
         this.pname = product.getPname();
         this.price = product.getPrice();
@@ -50,7 +50,7 @@ public class ProductReadDTO {
         this.thumFileNames = thumFileNames;
         this.detailFileNames = detailFileNames;
 
-        this.countScore = revivewCnt;
+        this.countScore = reviewCnt;
         this.averageScore = rscore;
     }
 }
