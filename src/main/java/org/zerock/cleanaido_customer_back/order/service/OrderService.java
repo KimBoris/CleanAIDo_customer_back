@@ -72,7 +72,7 @@ public class OrderService {
         Customer customer = customerRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
 
-        return orderRepository.findByCustomer(customer)
+        return orderRepository.findByCustomerOrderByOrderDateDesc(customer)
                 .stream()
                 .map(OrderDTO::new)
                 .collect(Collectors.toList());
