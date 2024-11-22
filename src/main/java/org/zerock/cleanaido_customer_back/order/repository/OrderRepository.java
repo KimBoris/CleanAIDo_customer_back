@@ -7,5 +7,5 @@ import org.zerock.cleanaido_customer_back.order.entity.Order;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByCustomer(Customer customer);
+    List<Order> findByCustomerOrderByOrderDateDesc(Customer customer);
 }

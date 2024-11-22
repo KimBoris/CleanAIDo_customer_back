@@ -60,18 +60,18 @@ public class ProductController {
     }
 
 
-//    // 크롤링 데이터 저장
-//    @PostMapping("/crawl")
-//    public ResponseEntity<String> crawlAndSaveProducts(@RequestParam String keyword) {
-//        log.info("Starting crawl for keyword: " + keyword);
-//        coupangCrawlService.crawlAndSaveProducts(keyword);
-//        return ResponseEntity.ok("Crawling completed and products saved.");
-//    }
-//
-//    // 상품 등록 (이미 존재하는 상품에 대해 추가 작업 가능)
-//    @PostMapping("")
-//    public ResponseEntity<Long> register(@RequestParam Long pno) {
-//        Long productNumber = cartService.addCartDetail(pno);
-//        return ResponseEntity.ok(productNumber);
-//    }
+    // 크롤링 데이터 저장
+    @PostMapping("/crawl")
+    public ResponseEntity<String> crawlAndSaveProducts(@RequestParam String keyword) {
+        log.info("Starting crawl for keyword: " + keyword);
+        daisoCrawlService.crawlAndSaveProducts(keyword);
+        return ResponseEntity.ok("Crawling completed and products saved.");
+    }
+
+    // 상품 등록 (이미 존재하는 상품에 대해 추가 작업 가능)
+    @PostMapping("")
+    public ResponseEntity<Long> register(@RequestParam Long pno) {
+        Long productNumber = cartService.addCartDetail(pno);
+        return ResponseEntity.ok(productNumber);
+    }
 }
