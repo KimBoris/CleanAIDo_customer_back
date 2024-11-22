@@ -27,7 +27,7 @@ public class CartService {
         return cartDetailRepository.list(customerId);
     }
 
-    public Long addCartDetail(Long pno){
+    public Long addCartDetail(Long pno, int qty){
 
         log.info("--------------");
         log.info("--service start---");
@@ -43,7 +43,7 @@ public class CartService {
         CartDetail cartDetail = CartDetail.builder()
                 .cart(cart)
                 .product(product) // Product 객체 참조
-                .quantity(1)
+                .quantity(qty)
                 .build();
 
         cartDetailRepository.save(cartDetail); // ProductCategory 저장
