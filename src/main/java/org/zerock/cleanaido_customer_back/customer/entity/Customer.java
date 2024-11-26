@@ -48,6 +48,9 @@ public class Customer {
     @Column(name="profile_image_url")
     private String profileImageUrl;
 
+    @Column(name="fcm_token")
+    private String fcmToken;
+
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 
