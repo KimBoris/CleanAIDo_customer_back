@@ -25,6 +25,7 @@ public class CustomerController {
         return null;
     }
 
+    // fcm 토큰 저장
     @PutMapping("fcm")
     public ResponseEntity<String> update(
             @RequestHeader("customer-id") String customerId,
