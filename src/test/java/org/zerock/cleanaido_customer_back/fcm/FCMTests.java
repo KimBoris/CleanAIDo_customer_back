@@ -18,7 +18,7 @@ public class FCMTests {
     public void sendTest() {
         String token = "eeCuTsZc8pqugAJA7ccSYc:APA91bH1XA4w8KVoF0VB_grbpTHhWMwnR5GoycDnd-kpCH6cqW-NLMKwZsahqVXbxMfLEFEumMZxDyoRyFBOqvrt3bLRKqCCbgjbcHkzz8g-0GZ7fM8jxWs";
         String title = "메세지 전송 테스트";
-        String body = "<h1>메세지 전송 테스트 입니다.</h1>";
+        String body = "메세지 전송 테스트 입니다.";
 
         FCMRequestDTO req = FCMRequestDTO .builder()
                 .token(token)
