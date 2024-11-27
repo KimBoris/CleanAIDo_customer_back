@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.cleanaido_customer_back.customer.entity.Customer;
 import org.zerock.cleanaido_customer_back.customer.repository.CustomerRepository;
+import org.zerock.cleanaido_customer_back.fcm.dto.FCMRequestDTO;
+import org.zerock.cleanaido_customer_back.fcm.service.FCMService;
 import org.zerock.cleanaido_customer_back.order.dto.OrderDTO;
 import org.zerock.cleanaido_customer_back.order.dto.PurchaseDTO;
 import org.zerock.cleanaido_customer_back.order.entity.Order;
@@ -25,6 +27,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
+    private final FCMService fcmService;
 
     public OrderDTO placeOrder(PurchaseDTO purchaseDTO) {
         // 고객 ID로 조회
@@ -71,6 +74,18 @@ public class OrderService {
     public List<OrderDTO> getCustomerOrders(String customerId) {
         Customer customer = customerRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
+
+        String token = customer.getFcmToken();
+        String title = "배송처리 완료";
+        String body = "배송처리가 완료되었습니다.";
+
+        FCMRequestDTO req = FCMRequestDTO .builder()
+                .token(token)
+                .title(title)
+                .body(body)
+                .build();
+
+        fcmService.sendMessage(req);
 
         return orderRepository.findByCustomerOrderByOrderDateDesc(customer)
                 .stream()
