@@ -75,18 +75,6 @@ public class OrderService {
         Customer customer = customerRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
 
-        String token = customer.getFcmToken();
-        String title = "배송처리 완료";
-        String body = "배송처리가 완료되었습니다.";
-
-        FCMRequestDTO req = FCMRequestDTO .builder()
-                .token(token)
-                .title(title)
-                .body(body)
-                .build();
-
-        fcmService.sendMessage(req);
-
         return orderRepository.findByCustomerOrderByOrderDateDesc(customer)
                 .stream()
                 .map(OrderDTO::new)
