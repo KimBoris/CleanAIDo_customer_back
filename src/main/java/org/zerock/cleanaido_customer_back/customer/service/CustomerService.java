@@ -13,6 +13,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    // fcm 토큰 저장
     public void updateFcmToken(String customerId, String fcmToken) {
 
         Customer customer = customerRepository.findById(customerId)
