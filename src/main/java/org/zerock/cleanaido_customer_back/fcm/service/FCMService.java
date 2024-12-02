@@ -16,37 +16,37 @@ import org.zerock.cleanaido_customer_back.fcm.exceptions.FCMMessageException;
 @Log4j2
 public class FCMService {
 
-    private final FirebaseMessaging firebaseMessaging;
-
-    public void sendMessage(FCMRequestDTO fcmRequestDTO) {
-
-        if(fcmRequestDTO == null) {
-            throw new FCMMessageException("fcmRequestDTO is null");
-        }
-        if(fcmRequestDTO.getToken() == null) {
-            throw new FCMMessageException("fcmRequestDTO.getToken is null");
-        }
-
-        if(fcmRequestDTO.getTitle() == null || fcmRequestDTO.getTitle().isEmpty()) {
-            throw new FCMMessageException("title is null or empty");
-        }
-
-        Notification notification = Notification.builder()
-                .setBody(fcmRequestDTO.getBody())
-                .setTitle(fcmRequestDTO.getTitle())
-                .build();
-
-        Message message = Message.builder()
-                .setToken(fcmRequestDTO.getToken())
-                .setNotification(notification)
-                .build();
-
-
-        try {
-            firebaseMessaging.send(message);
-        } catch (FirebaseMessagingException e) {
-            throw new FCMMessageException(e.getMessage());
-        }
-
-    }
+//    private final FirebaseMessaging firebaseMessaging;
+//
+//    public void sendMessage(FCMRequestDTO fcmRequestDTO) {
+//
+//        if(fcmRequestDTO == null) {
+//            throw new FCMMessageException("fcmRequestDTO is null");
+//        }
+//        if(fcmRequestDTO.getToken() == null) {
+//            throw new FCMMessageException("fcmRequestDTO.getToken is null");
+//        }
+//
+//        if(fcmRequestDTO.getTitle() == null || fcmRequestDTO.getTitle().isEmpty()) {
+//            throw new FCMMessageException("title is null or empty");
+//        }
+//
+//        Notification notification = Notification.builder()
+//                .setBody(fcmRequestDTO.getBody())
+//                .setTitle(fcmRequestDTO.getTitle())
+//                .build();
+//
+//        Message message = Message.builder()
+//                .setToken(fcmRequestDTO.getToken())
+//                .setNotification(notification)
+//                .build();
+//
+//
+//        try {
+//            firebaseMessaging.send(message);
+//        } catch (FirebaseMessagingException e) {
+//            throw new FCMMessageException(e.getMessage());
+//        }
+//
+//    }
 }
