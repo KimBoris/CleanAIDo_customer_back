@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.zerock.cleanaido_customer_back.category.entity.Category;
 
 
 @Data
@@ -18,4 +19,5 @@ public class ProductListDTO {
     private String fileName;
     private Long reviewCount;
     private int score;
+    private String category;
 }
