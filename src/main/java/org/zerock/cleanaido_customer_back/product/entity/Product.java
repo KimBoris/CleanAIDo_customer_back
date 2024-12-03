@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.zerock.cleanaido_customer_back.category.entity.Category;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -49,6 +50,12 @@ public class Product {
     @Builder.Default
     private String pstatus = "판매중";
 
+    @Column(name = "use_case", nullable = false)
+    private String puseCase;
+
+    @Column(name = "used_item", nullable = false)
+    private String pusedItem;
+
     @Column(name = "tags", length = 100)
     private String ptags;
 
@@ -71,8 +78,6 @@ public class Product {
         imageFiles.clear();
     }
 
-
-
     public void addUsingImageFile(String filename) {
         usageImageFiles.add(new UsageImageFile(imageFiles.size(), filename));
     }
@@ -80,4 +85,8 @@ public class Product {
     public void clearUsageImageFile() {
         usageImageFiles.clear();
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_number", nullable = false)
+    private Category category;
 }
