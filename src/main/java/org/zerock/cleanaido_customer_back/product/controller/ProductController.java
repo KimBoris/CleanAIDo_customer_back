@@ -17,7 +17,7 @@ import org.zerock.cleanaido_customer_back.product.service.ProductService;
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"})
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     private final ProductService productService;
