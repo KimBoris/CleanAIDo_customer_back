@@ -31,7 +31,8 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         QReview review = QReview.review;
         QCategory category = QCategory.category;
 
-        JPQLQuery<Product> query = from(product);
+        JPQLQuery<Product> query = from(product).where(product.pstatus.eq("selling"));
+
         query.leftJoin(product.imageFiles, imageFile).on(imageFile.ord.eq(0));
         query.leftJoin(product.category, category).on(category.cno.eq(product.category.cno));
         query.leftJoin(review).on(review.product.eq(product));
