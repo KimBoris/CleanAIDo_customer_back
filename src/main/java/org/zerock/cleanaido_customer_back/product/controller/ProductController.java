@@ -10,7 +10,7 @@ import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.common.dto.SearchDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
-import org.zerock.cleanaido_customer_back.product.service.DaisoCrawlService;
+//import org.zerock.cleanaido_customer_back.product.service.DaisoCrawlService;
 import org.zerock.cleanaido_customer_back.product.service.ProductService;
 
 @RestController
@@ -21,7 +21,7 @@ import org.zerock.cleanaido_customer_back.product.service.ProductService;
 public class ProductController {
 
     private final ProductService productService;
-    private final DaisoCrawlService daisoCrawlService;
+//    private final DaisoCrawlService daisoCrawlService;
     private final CartService cartService;
 
     // 상품 목록 조회 (검색 포함)
@@ -61,12 +61,12 @@ public class ProductController {
 
 
     // 크롤링 데이터 저장
-    @PostMapping("crawl")
-    public ResponseEntity<String> crawlAndSaveProducts(@RequestParam String keyword) {
-        log.info("Starting crawl for keyword: " + keyword);
-        daisoCrawlService.crawlAndSaveProducts(keyword);
-        return ResponseEntity.ok("Crawling completed and products saved.");
-    }
+//    @PostMapping("crawl")
+//    public ResponseEntity<String> crawlAndSaveProducts(@RequestParam String keyword) {
+//        log.info("Starting crawl for keyword: " + keyword);
+//        daisoCrawlService.crawlAndSaveProducts(keyword);
+//        return ResponseEntity.ok("Crawling completed and products saved.");
+//    }
 
     // 상품 등록 (이미 존재하는 상품에 대해 추가 작업 가능)
     @PostMapping("")
