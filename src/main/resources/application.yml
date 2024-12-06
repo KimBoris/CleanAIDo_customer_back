@@ -6,13 +6,13 @@ spring:
     url: jdbc:mariadb://10.10.10.158:3306/cleanaido
     username: cleanaidouser
     password: cleanaidouser
-#    url: jdbc:mariadb://10.10.10.79:3306/cleanaido
-#    username: cleanaidouser
-#    password: cleanaidouser
+    #    url: jdbc:mariadb://10.10.10.79:3306/cleanaido
+    #    username: cleanaidouser
+    #    password: cleanaidouser
 
-#    url: jdbc:mariadb://127.0.0.1:13306/webdb2
-#    username: root
-#    password: 12345678
+    #    url: jdbc:mariadb://127.0.0.1:13306/webdb2
+    #    username: root
+    #    password: 12345678
 
     hikari:
       minimum-idle: 2
@@ -47,3 +47,5 @@ logging:
   level:
     org.springframework.security.web: TRACE
 
+jwt:
+  secret: c2VjdXJlLXNlY3JldC1rZXktZm9yLUpXVC1hdXRoZW50aWNhdGlvbi13aXRoLWEtbWluaW11bS1vZi02NC1jaGFyYWN0ZXJz
