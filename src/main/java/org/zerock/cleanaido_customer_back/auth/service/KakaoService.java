@@ -38,7 +38,6 @@ public class KakaoService {
         }
     }
 
-
     public KakaoUserDTO getUserInfo(String accessToken) {
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -55,12 +54,22 @@ public class KakaoService {
 
             Map<String, Object> kakaoAccount = (Map<String, Object>) response.getBody().get("kakao_account");
             String id = String.valueOf(response.getBody().get("id"));
-            String nickname = (String) ((Map<String, Object>) response.getBody().get("properties")).get("nickname");
+            String email = (kakaoAccount != null && kakaoAccount.get("email") != null)
+                    ? kakaoAccount.get("email").toString() : null;
+            String nickname = (response.getBody().get("properties") != null)
+                    ? (String) ((Map<String, Object>) response.getBody().get("properties")).get("nickname")
+                    : "Unknown";
 
-            return new KakaoUserDTO(id, nickname, null, null);
+            if (email == null || email.isBlank()) {
+                System.out.println("Warning: Email is not available in Kakao account. Using ID instead.");
+                email = id + "@kakao-temp.com"; // 임시 이메일 생성
+            }
+
+            return new KakaoUserDTO(id, nickname, email, null);
         } catch (Exception e) {
             throw new IllegalArgumentException("Error during Kakao user info retrieval: " + e.getMessage(), e);
         }
     }
+
 
 }

@@ -3,6 +3,7 @@ package org.zerock.cleanaido_customer_back.auth.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.cleanaido_customer_back.auth.util.JWTUtil;
 import org.zerock.cleanaido_customer_back.customer.dto.CustomerRegisterDTO;
@@ -31,9 +32,15 @@ public class AuthController {
         try {
             KakaoUserDTO kakaoUser = customerService.getKakaoUserInfoFromKakao(code);
 
-            if (customerService.findCustomerById(kakaoUser.getId()).isPresent()) {
-                String accessToken = jwtUtil.generateAccessToken(kakaoUser.getId());
-                String refreshToken = jwtUtil.generateRefreshToken(kakaoUser.getId());
+            String email = kakaoUser.getEmail();
+            if (email == null || email.isBlank()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Email not available in Kakao account. Please ensure email sharing is enabled.");
+            }
+
+            if (customerService.findCustomerById(email).isPresent()) {
+                String accessToken = jwtUtil.generateAccessToken(email);
+                String refreshToken = jwtUtil.generateRefreshToken(email);
                 return ResponseEntity.ok(Map.of(
                         "accessToken", accessToken,
                         "refreshToken", refreshToken
@@ -44,31 +51,45 @@ public class AuthController {
                         "kakaoUser", kakaoUser
                 ));
             }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid Kakao code or token: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during Kakao login: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error during Kakao login: " + e.getMessage());
         }
     }
-
 
     @PostMapping("/register")
     public ResponseEntity<?> registerCustomer(@RequestBody CustomerRegisterDTO dto) {
-        Customer customer = customerService.registerCustomer(dto);
+        try {
+            Customer customer = customerService.registerCustomer(dto);
 
-        String accessToken = jwtUtil.generateAccessToken(customer.getCustomerId());
-        String refreshToken = jwtUtil.generateRefreshToken(customer.getCustomerId());
+            String accessToken = jwtUtil.generateAccessToken(customer.getCustomerId());
+            String refreshToken = jwtUtil.generateRefreshToken(customer.getCustomerId());
 
-        return ResponseEntity.ok(Map.of("accessToken", accessToken, "refreshToken", refreshToken));
+            return ResponseEntity.ok(Map.of("accessToken", accessToken, "refreshToken", refreshToken));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid registration data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during registration: " + e.getMessage());
+        }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
-        String customerId = jwtUtil.validateAndExtract(refreshToken);
+        try {
+            String customerId = jwtUtil.validateAndExtract(refreshToken);
 
-        if (customerId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Refresh Token");
+            if (customerId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired Refresh Token");
+            }
+
+            String newAccessToken = jwtUtil.generateAccessToken(customerId);
+            return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during token refresh: " + e.getMessage());
         }
-
-        String newAccessToken = jwtUtil.generateAccessToken(customerId);
-        return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
     }
 }

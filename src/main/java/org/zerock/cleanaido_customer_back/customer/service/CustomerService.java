@@ -32,18 +32,26 @@ public class CustomerService {
         return customerRepository.findById(customerId);
     }
 
-    // 신규 사용자 등록
     public Customer registerCustomer(CustomerRegisterDTO dto) {
+        if (dto.getCustomerId() == null || dto.getCustomerId().isBlank()) {
+            throw new IllegalArgumentException("Customer ID (email) is required for registration.");
+        }
+
         Customer customer = Customer.builder()
-                .customerId(dto.getCustomerId())
-                .customerName(dto.getName())
+                .customerId(dto.getCustomerId()) // 이메일을 ID로 사용
+                .customerPw(dto.getCustomerPw())
+                .customerName(dto.getCustomerName())
+                .birthDate(dto.getBirthDate())
                 .phoneNumber(dto.getPhoneNumber())
                 .address(dto.getAddress())
                 .profileImageUrl(dto.getProfileImageUrl())
                 .createDate(new Timestamp(System.currentTimeMillis()))
+                .delFlag(false)
                 .build();
+
         return customerRepository.save(customer);
     }
+
 
     // 카카오 사용자 정보로 조회
     public KakaoUserDTO getKakaoUserInfoFromKakao(String code) {
