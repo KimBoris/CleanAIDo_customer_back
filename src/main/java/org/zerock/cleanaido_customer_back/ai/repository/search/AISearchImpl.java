@@ -1,37 +1,38 @@
-//package org.zerock.cleanaido_customer_back.ai.repository.search;
-//
-//import com.querydsl.jpa.JPQLQuery;
-//import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-//import org.zerock.cleanaido_customer_back.category.entity.QCategory;
-//import org.zerock.cleanaido_customer_back.category.entity.QProductCategory;
-//import org.zerock.cleanaido_customer_back.product.entity.QProduct;
-//import org.zerock.cleanaido_customer_back.product.entity.QUsageImageFile;
-//
-//
-//public class AISearchImpl extends QuerydslRepositorySupport implements AISearch {
-//
-//    public AISearchImpl() {
-//        super(QProduct.class);
-//    }
-//
-//    @Override
-//    public String getCategorys(String[] imgNames) {
-//        QProduct product = QProduct.product;
-//        QUsageImageFile usageImageFile = QUsageImageFile.usageImageFile;
-//        QProductCategory productCategory = QProductCategory.productCategory;
-//        QCategory category = QCategory.category;
-//
-//        // QueryDSL 쿼리 작성
-//        JPQLQuery<String> query = from(product)
-//                .join(product.usageImageFiles, usageImageFile)
-//                .join(productCategory).on(product.eq(productCategory.product))
-//                .join(productCategory.category, category)
-//                .where(usageImageFile.fileName.in(imgNames))
-//                .select(category.cname)
-//                .distinct();
-//
-//        // 결과를 ','로 이어붙인 문자열로 반환
-//        return String.join(",", query.fetch());
-//    }
-//}
-//
+package org.zerock.cleanaido_customer_back.ai.repository.search;
+
+import com.querydsl.core.Tuple;
+import com.querydsl.jpa.JPQLQuery;
+import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
+import org.zerock.cleanaido_customer_back.product.entity.QProduct;
+import org.zerock.cleanaido_customer_back.product.entity.QUsageImageFile;
+
+import java.util.stream.Collectors;
+
+
+public class AISearchImpl extends QuerydslRepositorySupport implements AISearch {
+
+    public AISearchImpl() {
+        super(QProduct.class);
+    }
+
+    @Override
+    public String getCategorys(String[] imgNames) {
+        QProduct product = QProduct.product;
+        QUsageImageFile usageImageFile = QUsageImageFile.usageImageFile;
+
+        // QueryDSL 쿼리 작성
+        JPQLQuery<Tuple> query = from(product)
+                .join(product.usageImageFiles, usageImageFile)
+                .where(usageImageFile.fileName.in(imgNames))
+                .select(product.puseCase, product.pusedItem)
+                .distinct();
+
+        // Tuple을 문자열로 변환하여 ','로 이어붙이기
+        return query.fetch().stream()
+                .map(tuple -> tuple.get(product.puseCase) + " - " + tuple.get(product.pusedItem)) // 원하는 형식으로 변환
+                .distinct() // 중복 제거 (필요 시)
+                .collect(Collectors.joining(","));
+    }
+
+}
+
