@@ -62,7 +62,7 @@ public class Product {
     private String ptags;
 
 //    @ManyToOne(fetch = FetchType.LAZY) // Many products can belong to one user
-//    @JoinColumn(name = "user_id") // Join with the 'user_id' column in 'users' table
+    @JoinColumn(name = "user_id") // Join with the 'user_id' column in 'users' table
     private String seller;
 
     @ElementCollection
