@@ -52,7 +52,6 @@ cloud:
     credentials:
       access-key: ${IAM_LOCAL_ACCESS}
       secret-key: ${IAM_LOCAL_SECRET}
-
     region:
       static: ap-northeast-2
     stack:
