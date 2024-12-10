@@ -8,13 +8,14 @@ import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
 import org.zerock.cleanaido_customer_back.product.entity.Product;
 
+import java.util.List;
+
 public interface ProductSearch {
 
     PageResponseDTO<ProductListDTO> list(PageRequestDTO pageRequestDTO);
 
     PageResponseDTO<ProductListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO);
 
-
-
+    List<ProductListDTO> listSuggest();
 
 }

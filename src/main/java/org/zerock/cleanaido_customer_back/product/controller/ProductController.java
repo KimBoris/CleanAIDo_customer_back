@@ -13,6 +13,8 @@ import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
 //import org.zerock.cleanaido_customer_back.product.service.DaisoCrawlService;
 import org.zerock.cleanaido_customer_back.product.service.ProductService;
 
+import java.util.List;
+
 @RestController
 @Log4j2
 @RequiredArgsConstructor
@@ -76,5 +78,13 @@ public class ProductController {
     ) {
         Long productNumber = cartService.addCartDetail(pno, qty);
         return ResponseEntity.ok(productNumber);
+    }
+
+    // 추천상품(랜덤)
+    @GetMapping("/suggest")
+    public ResponseEntity<List<ProductListDTO>> suggestList(){
+
+        return ResponseEntity.ok(productService.listProductSuggest());
+
     }
 }

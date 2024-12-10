@@ -80,5 +80,16 @@ public class ProductService {
         return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalPage());
     }
 
+    // 추천상품 랜덤
+    public List<ProductListDTO> listProductSuggest() {
+
+        List<ProductListDTO> response = productRepository.listSuggest();
+
+
+        log.info("---------------------------------------1");
+        log.info(response);
+        return response;
+    }
+
 
 }

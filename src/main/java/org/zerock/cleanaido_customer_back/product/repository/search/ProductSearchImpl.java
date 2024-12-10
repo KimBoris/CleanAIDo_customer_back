@@ -2,6 +2,7 @@ package org.zerock.cleanaido_customer_back.product.repository.search;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPQLQuery;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +20,7 @@ import static com.querydsl.core.group.GroupBy.avg;
 
 @Log4j2
 public class ProductSearchImpl extends QuerydslRepositorySupport implements ProductSearch {
+
     public ProductSearchImpl() {
         super(Product.class);
     }
@@ -139,6 +141,46 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 .pageRequestDTO(pageRequestDTO)
                 .build();
     }
+    
+    // 랜덤으로 가져오는 추천상품 리스트
+    public List<ProductListDTO> listSuggest() {
+
+        QProduct product = QProduct.product;
+        QImageFile imageFile = QImageFile.imageFile;
+        QReview review = QReview.review;
+        QCategory category = QCategory.category;
+
+        JPQLQuery<Product> query = from(product).where(product.pstatus.eq("selling"));
+
+        query.leftJoin(product.imageFiles, imageFile).on(imageFile.ord.eq(0));
+        query.leftJoin(product.category, category).on(category.cno.eq(product.category.cno));
+        query.leftJoin(review).on(review.product.eq(product));
+        query.groupBy(product);
+        query.limit(10);
+        query.orderBy(Expressions.numberTemplate(Double.class, "function('RAND')").asc());
+
+        JPQLQuery<ProductListDTO> results =
+                query.select(
+                        Projections.bean(
+                                ProductListDTO.class,
+                                product.pno,
+                                product.pname,
+                                product.price,
+                                product.pstatus,
+                                imageFile.fileName,
+                                review.count().as("reviewCount"),
+                                review.score.avg().round().castToNum(Integer.class).as("score"),
+                                product.category.cname.as("category")
+                        )
+                );
+
+        List<ProductListDTO> dtoList = results.fetch();
+
+        log.info("Randomly fetched products: {}", dtoList);
+
+        return dtoList; // PageResponseDTO 없이 리스트 반환
+    }
+
 
 
 }
