@@ -1,11 +1,15 @@
 spring:
   application:
     name: api1
+
+  config:
+    import: optional:file:.env[.properties]
+
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://10.10.10.158:3306/cleanaido
-    username: cleanaidouser
-    password: cleanaidouser
+    url: ${AWS_DB_URL}
+    username: ${AWS_DB_USERNAME}
+    password: ${AWS_DB_PASSWORD}
 
     hikari:
       minimum-idle: 2
@@ -41,4 +45,17 @@ logging:
     org.springframework.security.web: TRACE
 
 jwt:
-  secret: c2VjdXJlLXNlY3JldC1rZXktZm9yLUpXVC1hdXRoZW50aWNhdGlvbi13aXRoLWEtbWluaW11bS1vZi02NC1jaGFyYWN0ZXJz
+  secret: ${JWT_SECRET_KEY}
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${IAM_LOCAL_ACCESS}
+      secret-key: ${IAM_LOCAL_SECRET}
+
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: bucket-cleanaido
