@@ -25,33 +25,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .cors().configurationSource(corsConfigurationSource()) // CORS 설정
-                .and()
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/kakao", "/login").permitAll() // 로그인 관련 API는 인증 없이 허용
+                        .requestMatchers("/api/auth/register", "/api/auth/kakao", "/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
-                .exceptionHandling()
-                .authenticationEntryPoint((request, response, authException) -> {
-                    // 인증 실패 시 401 반환
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("Unauthorized access. Please login.");
-                });
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access. Please login.");
+                        })
+                );
 
         return http.build();
     }
 
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173")); // 패턴 사용
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용 메서드
-        configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
-        configuration.setAllowCredentials(true); // 인증 정보 허용
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
 
+        // CORS 설정 간소화
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

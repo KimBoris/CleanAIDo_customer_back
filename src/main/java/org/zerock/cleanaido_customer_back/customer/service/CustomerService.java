@@ -38,7 +38,7 @@ public class CustomerService {
         }
 
         Customer customer = Customer.builder()
-                .customerId(dto.getCustomerId()) // 이메일을 ID로 사용
+                .customerId(dto.getCustomerId())
                 .customerPw(dto.getCustomerPw())
                 .customerName(dto.getCustomerName())
                 .birthDate(dto.getBirthDate())
