@@ -40,3 +40,5 @@ logging:
   level:
     org.springframework.security.web: TRACE
 
+jwt:
+  secret: c2VjdXJlLXNlY3JldC1rZXktZm9yLUpXVC1hdXRoZW50aWNhdGlvbi13aXRoLWEtbWluaW11bS1vZi02NC1jaGFyYWN0ZXJz

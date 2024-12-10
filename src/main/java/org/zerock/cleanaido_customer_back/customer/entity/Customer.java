@@ -51,7 +51,7 @@ public class Customer {
     @Column(name="fcm_token")
     private String fcmToken;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Order> orders;
 
 }
