@@ -1,6 +1,7 @@
 package org.zerock.cleanaido_customer_back.auth.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@Log4j2
 public class AuthController {
 
     private final CustomerService customerService;
@@ -24,6 +26,8 @@ public class AuthController {
 
     @PostMapping("/kakao")
     public ResponseEntity<?> kakaoLogin(@RequestBody Map<String, String> request) {
+        log.info("------------------------");
+        log.info("kakao login");
         String code = request.get("code");
         if (code == null || code.isBlank()) {
             return ResponseEntity.badRequest().body("Authorization code is missing.");
