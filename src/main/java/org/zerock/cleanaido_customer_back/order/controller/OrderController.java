@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.cleanaido_customer_back.common.dto.ApproveResponse;
 import org.zerock.cleanaido_customer_back.common.dto.ReadyResponse;
@@ -27,9 +28,16 @@ public class OrderController {
     // 주문 생성
     @PostMapping("/create")
     public ResponseEntity<OrderDTO> createOrder(@RequestBody PurchaseDTO purchaseDTO) {
-        OrderDTO orderDTO = orderService.placeOrder(purchaseDTO);
+        // JWT에서 customerId 추출
+        String customerId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        log.info("Logged-in customerId: " + customerId);
+
+        // OrderService 호출 시 customerId 전달
+        OrderDTO orderDTO = orderService.placeOrder(customerId, purchaseDTO);
         return ResponseEntity.ok(orderDTO);
     }
+
 
     // 고객 주문 목록 조회
     @GetMapping("/list")

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PurchaseDTO {
-    private String customerId;
+//    private String customerId;
     private String customerName;
     private String phoneNumber;
     private String deliveryAddress;

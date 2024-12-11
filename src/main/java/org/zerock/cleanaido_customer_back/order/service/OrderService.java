@@ -26,10 +26,11 @@ public class OrderService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
 
-    public OrderDTO placeOrder(PurchaseDTO purchaseDTO) {
-        // 고객 ID로 조회
-        Customer customer = customerRepository.findByCustomerId(purchaseDTO.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+    // 수정된 placeOrder: customerId를 별도로 받음
+    public OrderDTO placeOrder(String customerId, PurchaseDTO purchaseDTO) {
+        // JWT에서 전달받은 customerId로 고객 조회
+        Customer customer = customerRepository.findByCustomerId(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
 
         // 주문 생성
         Order order = Order.builder()
@@ -44,28 +45,24 @@ public class OrderService {
 
         // 주문 상세 정보 추가
         purchaseDTO.getOrderDetails().forEach(detailDTO -> {
-            // Product 유효성 확인
             Product product = productRepository.findById(detailDTO.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("Invalid Product ID: " + detailDTO.getProductId()));
 
             OrderDetail orderDetail = OrderDetail.builder()
-                    .product(product) // 유효한 Product 객체 사용
+                    .product(product)
                     .quantity(detailDTO.getQuantity())
                     .price(detailDTO.getPrice())
                     .build();
+
             order.addOrderDetail(orderDetail);
         });
 
         // 주문 저장
         Order savedOrder = orderRepository.save(order);
 
-        // 고객 이름 포함하여 반환
-        OrderDTO orderDTO = new OrderDTO(savedOrder);
-        orderDTO.setCustomerName(customer.getCustomerName());
-        return orderDTO;
+        // DTO 반환
+        return new OrderDTO(savedOrder);
     }
-
-
 
     // 고객의 주문 목록을 조회하는 메서드
     public List<OrderDTO> getCustomerOrders(String customerId) {
