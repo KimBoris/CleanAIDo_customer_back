@@ -16,7 +16,7 @@ public class JWTUtil {
     private final long accessExpiration = 1000 * 60 * 60; // 1시간
     private final long refreshExpiration = 1000 * 60 * 60 * 24 * 7; // 7일
 
-    public JWTUtil(@Value("${jwt.secret}") String secretKey) {
+    public JWTUtil(@Value("12313123123123123asdfasdfasdfasdfsdfasdfasdfasdfasdfasdfasdfadfasdfadfs") String secretKey) {
         // Base64로 인코딩된 키를 디코딩 후 Key 객체 생성
         if (secretKey == null || secretKey.length() < 64) {
             throw new IllegalArgumentException("The secret key must be at least 64 characters long.");
