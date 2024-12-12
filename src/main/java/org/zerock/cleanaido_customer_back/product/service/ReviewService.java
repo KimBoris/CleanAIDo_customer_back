@@ -60,6 +60,7 @@ public class ReviewService {
         // Review 필드
         Review review = Review.builder()
                 .reviewContent(dto.getReviewContent())
+                .score(dto.getScore())
                 .product(product)
                 .customer(customer)
                 .build();
