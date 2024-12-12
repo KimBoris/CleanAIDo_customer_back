@@ -18,6 +18,6 @@ public class ReviewRegisterDTO {
     private String customerId;
     private String reviewContent;
     private List<String> fileNames;
-    private boolean delFlag;
+    private int score;
 
 }
