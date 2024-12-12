@@ -21,7 +21,7 @@ public class KakaoService {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("grant_type", "authorization_code");
             params.add("client_id", "bd7725f821010811fbfbb131b8f9985d");
-            params.add("redirect_uri", "http://cleanaido-customer-1708095652.ap-northeast-2.elb.amazonaws.com/oauth/kakao/callback");
+            params.add("redirect_uri", "cleanaido-customer-1708095652.ap-northeast-2.elb.amazonaws.com/oauth/kakao/callback");
             params.add("code", code);
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
