@@ -35,7 +35,7 @@ public class ProductController {
             @RequestParam(value = "keyword", required = false) String keyword
     ) {
         SearchDTO searchDTO = SearchDTO.builder()
-                .searchType(type)
+                .type(type)
                 .keyword(keyword)
                 .build();
 
@@ -49,7 +49,7 @@ public class ProductController {
             log.info("Fetching full product list...");
             return ResponseEntity.ok(productService.listProduct(pageRequestDTO));
         } else {
-            log.info("Searching with type: " + searchDTO.getSearchType() + ", keyword: " + searchDTO.getKeyword());
+            log.info("Searching with type: " + searchDTO.getType() + ", keyword: " + searchDTO.getKeyword());
             return ResponseEntity.ok(productService.search(pageRequestDTO));
         }
     }

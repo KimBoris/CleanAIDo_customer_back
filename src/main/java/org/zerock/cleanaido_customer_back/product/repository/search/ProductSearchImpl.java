@@ -90,7 +90,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         query.leftJoin(product.imageFiles, imageFile).on(imageFile.ord.eq(0));
         query.leftJoin(product.category, category).on(category.cno.eq(product.category.cno));
         query.leftJoin(review).on(review.product.eq(product));
-//        query.groupBy(product);
+        query.groupBy(product);
         query.orderBy(product.pno.desc());
 
         log.info("Type = " + type);
@@ -101,8 +101,10 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                     .or(product.pname.like("%" + keyword + "%"))
                     .or(product.ptags.like("%" + keyword + "%"));
             query.where(builder).distinct();
-        } else if (type.equals("Category")) {
+            log.info("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe");
+        } else if (type.equals("category")) {
             query.where(category.cname.like("%" + keyword + "%"));
+            log.info("ddddddddddddddddddddddddddddddddddddddddd");
 
         }
 
