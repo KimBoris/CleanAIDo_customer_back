@@ -36,6 +36,48 @@ public class ReviewSearchImpl extends QuerydslRepositorySupport implements Revie
         query.leftJoin(review.reviewImages, reviewImage).fetchJoin(); // fetchJoin으로 이미지 가져오기
         query.leftJoin(review.customer, customer);
         query.where(review.product.pno.eq(pno));
+        query.where(review.delFlag.eq(false));
+        query.orderBy(review.reviewNumber.desc());
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
+        getQuerydsl().applyPagination(pageable, query);
+
+        List<ReviewListDTO> dtoList = query.fetch().stream()
+                .map(r -> ReviewListDTO.builder()
+                        .reviewNumber(r.getReviewNumber())
+                        .reviewContent(r.getReviewContent())
+                        .createDate(r.getCreateDate())
+                        .score(r.getScore())
+                        .customerName(r.getCustomer().getCustomerName())
+                        .fileNames(r.getReviewImages().stream()
+                                .map(image -> image.getFileName())
+                                .collect(Collectors.toList()))
+                        .customerProfileImg(r.getCustomer().getProfileImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+
+        long total = query.fetchCount();
+
+        return PageResponseDTO.<ReviewListDTO>withAll()
+                .dtoList(dtoList)
+                .totalCount(total)
+                .pageRequestDTO(pageRequestDTO)
+                .build();
+    }
+
+    @Override
+    public PageResponseDTO<ReviewListDTO> listByCustomer(PageRequestDTO pageRequestDTO, String customerId) {
+
+        QReview review = QReview.review;
+        QCustomer customer = QCustomer.customer;
+        QReviewImage reviewImage = QReviewImage.reviewImage;
+
+        // 기본 리뷰 쿼리 설정
+        JPQLQuery<Review> query = from(review);
+        query.leftJoin(review.reviewImages, reviewImage).fetchJoin(); // fetchJoin으로 이미지 가져오기
+        query.leftJoin(review.customer, customer);
+        query.where(review.delFlag.eq(false));
+        query.where(review.customer.customerId.eq(customerId));
         query.orderBy(review.reviewNumber.desc());
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());

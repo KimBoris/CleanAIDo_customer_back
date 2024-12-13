@@ -8,4 +8,6 @@ public interface ReviewSearch {
 
     PageResponseDTO<ReviewListDTO> listByProduct(PageRequestDTO pageRequestDTO, Long pno);
 
+    PageResponseDTO<ReviewListDTO> listByCustomer(PageRequestDTO pageRequestDTO, String customerId);
+
 }
