@@ -45,7 +45,7 @@ public class Customer {
     @Column(name="address")
     private String address;
 
-    @Column(name="profile_image_url")
+    @Column(name="profile_image_url", nullable = true)
     private String profileImageUrl;
 
     @Column(name="fcm_token")
