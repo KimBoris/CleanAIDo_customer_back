@@ -11,7 +11,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
         "org.zerock.cleanaido_customer_back.customer.entity",
         "org.zerock.cleanaido_customer_back.cart.entity",
         "org.zerock.cleanaido_customer_back.product.entity",
-        "org.zerock.cleanaido_customer_back.category.entity"
+        "org.zerock.cleanaido_customer_back.category.entity",
+        "org.zerock.cleanaido_customer_back.board.entity",
 })
 
 
