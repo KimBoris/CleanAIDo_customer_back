@@ -12,8 +12,6 @@ import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductListDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
-import org.zerock.cleanaido_customer_back.product.entity.ImageFile;
-import org.zerock.cleanaido_customer_back.product.entity.Product;
 import org.zerock.cleanaido_customer_back.product.repository.ProductRepository;
 
 import java.util.List;
@@ -54,7 +52,7 @@ public class ProductService {
     }
 
     public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
-        String type = pageRequestDTO.getSearchDTO().getSearchType();
+        String type = pageRequestDTO.getSearchDTO().getType();
         String keyword = pageRequestDTO.getSearchDTO().getKeyword();
 
         log.info("=========================================");

@@ -16,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @ToString(exclude = "product")
+@Data
 public class Review {
 
     @Id
