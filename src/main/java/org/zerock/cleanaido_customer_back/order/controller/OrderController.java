@@ -41,7 +41,10 @@ public class OrderController {
 
     // 고객 주문 목록 조회
     @GetMapping("/list")
-    public ResponseEntity<List<OrderDTO>> getCustomerOrders(@RequestParam String customerId) {
+    public ResponseEntity<List<OrderDTO>> getCustomerOrders() {
+
+        String customerId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         List<OrderDTO> orderList = orderService.getCustomerOrders(customerId);
         return ResponseEntity.ok(orderList);
     }
@@ -88,7 +91,7 @@ public class OrderController {
         return """
                 <script>
                     alert('주문이 완료되었습니다')
-                    window.location = "http://10.10.10.148:5173/mypage/order/complete";
+                    window.location = "http://10.10.10.151:5173/mypage/order/complete";
                 </script>
                 """;
     }

@@ -3,6 +3,7 @@ package org.zerock.cleanaido_customer_back.product.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.cleanaido_customer_back.cart.service.CartService;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
@@ -70,7 +71,6 @@ public class ProductController {
 //        return ResponseEntity.ok("Crawling completed and products saved.");
 //    }
 
-    // 상품 등록 (이미 존재하는 상품에 대해 추가 작업 가능)
     @PostMapping("")
     public ResponseEntity<Long> register(
             @RequestParam Long pno,
@@ -86,5 +86,22 @@ public class ProductController {
 
         return ResponseEntity.ok(productService.listProductSuggest());
 
+    }
+    
+    // 자주 구매한 상품
+    @GetMapping("/freq")
+    public ResponseEntity<PageResponseDTO<ProductListDTO>> freqList(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+
+        String customerId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(page)
+                .size(size)
+                .build();
+
+        return ResponseEntity.ok(productService.listFreqProduct(customerId, pageRequestDTO));
     }
 }

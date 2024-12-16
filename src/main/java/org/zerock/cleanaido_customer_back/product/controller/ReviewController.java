@@ -39,6 +39,22 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.listReviewsByProduct(pageRequestDTO, pno));
     }
 
+    @GetMapping("listbycustomer")
+    public ResponseEntity<PageResponseDTO<ReviewListDTO>> listbycustomer(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+
+        String customerId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(page)
+                .size(size)
+                .build();
+
+        return ResponseEntity.ok(reviewService.listReviewByCustomer(pageRequestDTO, customerId));
+    }
+
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> register(
             ReviewRegisterDTO reviewRegisterDTO,
@@ -56,6 +72,14 @@ public class ReviewController {
         Long reviewNumber = reviewService.registerReview(reviewRegisterDTO, uploadDTO);
 
         return ResponseEntity.ok(reviewNumber);
+    }
+
+    @PutMapping("delete/{reviewNum}")
+    public ResponseEntity<Long> deleteReview(@PathVariable Long reviewNum) {
+
+        Long response = reviewService.deleteReview(reviewNum);
+
+        return ResponseEntity.ok(response);
     }
 
 }

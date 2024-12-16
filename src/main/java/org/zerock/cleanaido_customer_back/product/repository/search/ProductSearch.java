@@ -18,4 +18,6 @@ public interface ProductSearch {
 
     List<ProductListDTO> listSuggest();
 
+    PageResponseDTO<ProductListDTO> listFreq(String customerId, PageRequestDTO pageRequestDTO);
+
 }
