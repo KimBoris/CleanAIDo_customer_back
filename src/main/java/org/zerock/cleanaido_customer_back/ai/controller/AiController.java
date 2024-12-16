@@ -13,7 +13,7 @@ import org.zerock.cleanaido_customer_back.common.dto.TempUploadDTO;
 @Log4j2
 @RequestMapping("/api/v1/ai")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"})
+@CrossOrigin(origins = "*")
 public class AiController {
 
     private final AIService aiService;
