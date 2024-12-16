@@ -36,19 +36,31 @@ public class ReviewService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
 
+    // 상품별 리뷰
     public PageResponseDTO<ReviewListDTO> listReviewsByProduct(PageRequestDTO pageRequestDTO, Long pno) {
 
         if (pageRequestDTO.getPage() < 1) {
             throw new IllegalArgumentException("페이지 번호는 1이상 이어야 합니다.");
         }
 
-        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
         PageResponseDTO<ReviewListDTO> response = reviewRepository.listByProduct(pageRequestDTO, pno);
 
         return response;
 
     }
 
+    // 고객별 리뷰
+    public PageResponseDTO<ReviewListDTO> listReviewByCustomer(PageRequestDTO pageRequestDTO, String customerId) {
+        if (pageRequestDTO.getPage() < 1) {
+            throw new IllegalArgumentException("페이지 번호는 1이상 이어야 합니다.");
+        }
+
+        PageResponseDTO<ReviewListDTO> response = reviewRepository.listByCustomer(pageRequestDTO, customerId);
+
+        return response;
+    }
+
+    // 리뷰 등록
     public Long registerReview(ReviewRegisterDTO dto, UploadDTO uploadDTO) {
 
         // Product, Customer 엔티티 조회
@@ -60,6 +72,7 @@ public class ReviewService {
         // Review 필드
         Review review = Review.builder()
                 .reviewContent(dto.getReviewContent())
+                .score(dto.getScore())
                 .product(product)
                 .customer(customer)
                 .build();
@@ -80,6 +93,18 @@ public class ReviewService {
         reviewRepository.save(review);
 
         return review.getReviewNumber();
+
+    }
+
+    // 리뷰 삭제
+    public Long deleteReview(Long reviewNum) {
+
+        Review review = reviewRepository.findById(reviewNum)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Product ID: " + reviewNum));
+
+        review.setDelFlag(true);
+
+        return reviewNum;
 
     }
 }
