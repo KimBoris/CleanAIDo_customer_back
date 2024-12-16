@@ -83,10 +83,20 @@ public class ProductService {
 
         List<ProductListDTO> response = productRepository.listSuggest();
 
-
-        log.info("---------------------------------------1");
-        log.info(response);
         return response;
+    }
+
+    // 자주 구매한 상품
+    public PageResponseDTO<ProductListDTO> listFreqProduct(String customerId, PageRequestDTO pageRequestDTO) {
+
+        if (pageRequestDTO.getPage() < 1) {
+            throw new IllegalArgumentException("페이지 번호는 1이상 이어야 합니다.");
+        }
+
+        PageResponseDTO<ProductListDTO> response = productRepository.listFreq(customerId, pageRequestDTO);
+
+        return response;
+
     }
 
 
