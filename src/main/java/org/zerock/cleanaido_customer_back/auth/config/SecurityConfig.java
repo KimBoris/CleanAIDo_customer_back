@@ -36,7 +36,9 @@ public class SecurityConfig {
                                 "/api/auth/register",
                                 "/api/auth/kakao",
                                 "/login",
-                                "/api/v1/mypage/order/pay/completed"
+                                "/api/v1/mypage/order/pay/completed",
+                                "/api/v1/category/list"
+
                         ).permitAll()
                         // Preflight 요청 OPTIONS 메서드 허용
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
