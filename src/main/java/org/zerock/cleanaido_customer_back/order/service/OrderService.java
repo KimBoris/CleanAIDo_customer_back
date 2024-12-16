@@ -26,9 +26,8 @@ public class OrderService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
 
-    // 수정된 placeOrder: customerId를 별도로 받음
     public OrderDTO placeOrder(String customerId, PurchaseDTO purchaseDTO) {
-        // JWT에서 전달받은 customerId로 고객 조회
+        // 고객 조회
         Customer customer = customerRepository.findByCustomerId(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
 
@@ -40,7 +39,6 @@ public class OrderService {
                 .deliveryMessage(purchaseDTO.getDeliveryMessage())
                 .orderDate(LocalDateTime.now())
                 .orderStatus("주문 완료")
-                .totalPrice(purchaseDTO.getTotalPrice())
                 .build();
 
         // 주문 상세 정보 추가
@@ -57,12 +55,16 @@ public class OrderService {
             order.addOrderDetail(orderDetail);
         });
 
+        // totalPrice 자동 계산
+        order.calculateTotalPrice();
+
         // 주문 저장
         Order savedOrder = orderRepository.save(order);
 
         // DTO 반환
         return new OrderDTO(savedOrder);
     }
+
 
     // 고객의 주문 목록을 조회하는 메서드
     public List<OrderDTO> getCustomerOrders(String customerId) {

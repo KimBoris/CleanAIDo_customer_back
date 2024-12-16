@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.customer.dto.CustomerListDTO;
+import org.zerock.cleanaido_customer_back.customer.entity.Customer;
 import org.zerock.cleanaido_customer_back.customer.service.CustomerService;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/customer")
@@ -17,6 +20,18 @@ import org.zerock.cleanaido_customer_back.customer.service.CustomerService;
 public class CustomerController {
 
     private final CustomerService customerService;
+
+    @GetMapping("/info")
+    public ResponseEntity<?> getCustomerInfo() {
+        Customer customer = customerService.getCustomerInfo();
+
+        return ResponseEntity.ok(Map.of(
+                "customerId", customer.getCustomerId(),
+                "customerName", customer.getCustomerName(),
+                "phoneNumber", customer.getPhoneNumber(),
+                "address", customer.getAddress()
+        ));
+    }
 
     @GetMapping("list")
     public ResponseEntity<PageResponseDTO<CustomerListDTO>> list()

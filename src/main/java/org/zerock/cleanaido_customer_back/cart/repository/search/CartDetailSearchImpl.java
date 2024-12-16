@@ -21,30 +21,26 @@ public class CartDetailSearchImpl extends QuerydslRepositorySupport implements C
 
     @Override
     public List<CartDetailDTO> list(String customerId) {
-        log.info("--------------");
-        log.info("---list start---");
-
         QCartDetail cartDetail = QCartDetail.cartDetail;
         QCart cart = QCart.cart;
         QCustomer customer = QCustomer.customer;
 
-        // JPQLQuery 생성 및 조인
-        JPQLQuery<CartDetail> query = from(cartDetail)
+        JPQLQuery<CartDetailDTO> query = from(cartDetail)
                 .join(cartDetail.cart, cart)
                 .join(cart.customer, customer)
-                .where(customer.customerId.eq(customerId)); // user.userid가 userid와 일치하는지 확인
+                .where(customer.customerId.eq(customerId))
+                .select(Projections.constructor(
+                        CartDetailDTO.class,
+                        cartDetail.cdno,
+                        cart.cartNo,
+                        cartDetail.product.pno,
+                        cartDetail.product.pname,
+                        cartDetail.product.price,
+                        cartDetail.quantity
+                ));
 
-        // DTO로 변환 및 select
-        JPQLQuery<CartDetailDTO> resultsQuery = query.select(Projections.bean(
-                CartDetailDTO.class,
-                cartDetail.cdno,
-                cartDetail.cart,
-                cartDetail.product,
-                cartDetail.quantity
-        ));
-
-        // 결과 리스트 반환
-        return resultsQuery.fetch();
+        return query.fetch();
     }
+
 
 }
