@@ -40,9 +40,9 @@ public class AiController {
 
         String question = extractedCategory + customerText;
 
-        //지피티에게 답변받기
         aiService.deleteTempImg(imageTitle);
 
+        //지피티에게 답변받기
         String solution = aiService.getSolution(question);
 
         return new SolutionDTO(extractedCategory, solution);

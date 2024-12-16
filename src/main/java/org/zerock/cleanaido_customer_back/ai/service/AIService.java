@@ -120,11 +120,10 @@ public class AIService {
         // GET 요청 보내기
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-        log.info(response.getBody().getClass().getName());
+        log.info(response.getBody());
 
         // 결과 반환
         if (response.getStatusCode() == HttpStatus.OK) {
-            // JSON 문자열을 2차원 배열로 변환
             String responseBody = response.getBody();
             return responseBody;
         } else {
