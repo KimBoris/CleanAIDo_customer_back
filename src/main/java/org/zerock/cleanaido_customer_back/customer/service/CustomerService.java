@@ -1,6 +1,7 @@
 package org.zerock.cleanaido_customer_back.customer.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.cleanaido_customer_back.auth.service.KakaoService;
@@ -50,6 +51,15 @@ public class CustomerService {
                 .build();
 
         return customerRepository.save(customer);
+    }
+
+    public Customer getCustomerInfo() {
+        // SecurityContextHolder에서 JWT에 담긴 customerId 가져오기
+        String customerId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // customerId를 기반으로 데이터베이스에서 조회
+        return customerRepository.findByCustomerId(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found: " + customerId));
     }
 
 

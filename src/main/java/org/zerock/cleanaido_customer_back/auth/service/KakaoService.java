@@ -70,6 +70,4 @@ public class KakaoService {
             throw new IllegalArgumentException("Error during Kakao user info retrieval: " + e.getMessage(), e);
         }
     }
-
-
 }

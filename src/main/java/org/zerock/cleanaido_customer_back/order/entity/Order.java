@@ -63,4 +63,11 @@ public class Order {
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    public void calculateTotalPrice() {
+        this.totalPrice = orderDetails.stream()
+                .mapToInt(OrderDetail::getTotalPrice) // 각 OrderDetail의 총 가격 계산
+                .sum();
+    }
+
 }

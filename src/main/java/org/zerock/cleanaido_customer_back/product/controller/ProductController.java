@@ -70,7 +70,6 @@ public class ProductController {
 //        return ResponseEntity.ok("Crawling completed and products saved.");
 //    }
 
-    // 상품 등록 (이미 존재하는 상품에 대해 추가 작업 가능)
     @PostMapping("")
     public ResponseEntity<Long> register(
             @RequestParam Long pno,
