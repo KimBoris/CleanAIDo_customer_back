@@ -1,12 +1,7 @@
 package org.zerock.cleanaido_customer_back.board.dto;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -27,5 +22,9 @@ public class BoardListDTO {
     private int viewCount;
 
     private boolean delFlag;
+
+    private String customerId;
+
+
 
 }

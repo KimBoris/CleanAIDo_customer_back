@@ -14,12 +14,14 @@ import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
 public interface BoardRepository extends JpaRepository<Board, Long>, BoardSearch {
 
     PageResponseDTO<BoardListDTO> list(PageRequestDTO pageRequestDTO);
+//
+//    @Query("""
+//            select b
+//            from Board b
+//            where b.bno = :bno and b.delFlag = false
+//                        """)
+//    BoardReadDTO getBoard(@Param("bno") Long bno);
 
-    @Query("""
-            select b 
-            from Board b
-            where b.bno = :bno and b.delFlag = false
-                        """)
-    BoardReadDTO getBoard(@Param("bno") Long bno);
 
+//    BoardReadDTO getBoard(Long bno) ;
 }

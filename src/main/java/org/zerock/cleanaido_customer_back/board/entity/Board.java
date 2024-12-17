@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.zerock.cleanaido_customer_back.customer.entity.Customer;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -41,4 +43,12 @@ public class Board {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ElementCollection
+    @Builder.Default
+    private Set<ImageFile> imageFiles = new HashSet<>();
+
+    public void addImageFile(String filename) {
+        imageFiles.add(new ImageFile(imageFiles.size(), filename));
+    }
 }

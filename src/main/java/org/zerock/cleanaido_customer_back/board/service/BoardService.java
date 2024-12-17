@@ -4,12 +4,8 @@ package org.zerock.cleanaido_customer_back.board.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.zerock.cleanaido_customer_back.board.dto.BoardListDTO;
 import org.zerock.cleanaido_customer_back.board.dto.BoardReadDTO;
 import org.zerock.cleanaido_customer_back.board.dto.BoardRegisterDTO;
@@ -17,12 +13,15 @@ import org.zerock.cleanaido_customer_back.board.entity.Board;
 import org.zerock.cleanaido_customer_back.board.repository.BoardRepository;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
+import org.zerock.cleanaido_customer_back.common.dto.UploadDTO;
+import org.zerock.cleanaido_customer_back.common.util.CustomFileUtil;
 import org.zerock.cleanaido_customer_back.customer.entity.Customer;
 import org.zerock.cleanaido_customer_back.customer.repository.CustomerRepository;
-import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,13 +31,15 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final CustomFileUtil customFileUtil;
     private final CustomerRepository customerRepository;
+//    private final S3Uploader s3Uploader;
+
 
     public PageResponseDTO<BoardListDTO> listBoard(PageRequestDTO pageRequestDTO) {
         if (pageRequestDTO.getPage() < 1) {
             throw new IllegalArgumentException("페이지 번호는 1이상 이어야 합니다.");
         }
-
         PageResponseDTO<BoardListDTO> response = boardRepository.list(pageRequestDTO);
 
         return response;
@@ -58,14 +59,17 @@ public class BoardService {
                         .createTime(board.getCreateTime())
                         .delFlag(board.isDelFlag())
                         .viewCount(board.getViewCount())
+                        .customerId(board.getCustomerId())
                         .build()).collect(Collectors.toList());
+
+        log.info(dtoList);
 
         return new PageResponseDTO<>(dtoList, pageRequestDTO, resultPage.getTotalPage());
 
     }
 
 
-    public Long registerBoard(BoardRegisterDTO boardRegisterDTO) {
+    public Long registerBoard(BoardRegisterDTO boardRegisterDTO, UploadDTO imageUploadDTO) {
 
         Customer customer = customerRepository.findById(boardRegisterDTO.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
@@ -79,16 +83,40 @@ public class BoardService {
                 customer(customer)
                 .build();
 
+        processImages(board, imageUploadDTO);
+
         boardRepository.save(board);
+        log.info("================");
+        log.info(board);
+        log.info(imageUploadDTO);
+        log.info("================");
 
         return board.getBno();
+    }
+
+    private void processImages(Board board, UploadDTO uploadDTO) {
+        log.info("Processing image for board: {}", board.getBno());
+        log.info("Upload image: {}", uploadDTO);
+
+        List<String> fileNames = Optional.ofNullable(uploadDTO.getFiles())
+                .map(files -> Arrays.stream(files)
+                        .filter(file -> !file.isEmpty())
+                        .collect(Collectors.toList()))
+                .filter(validFiles -> !validFiles.isEmpty())
+                .map(customFileUtil::saveFiles)
+                .orElse(Collections.emptyList());
+
+
+        for (String filename : fileNames) {
+            board.addImageFile(filename);
+        }
     }
 
     public BoardReadDTO readBoard(Long bno) {
 
         BoardReadDTO boardReadDTO = boardRepository.getBoard(bno);
 
-        log.info("boardReadDTO = "+boardReadDTO);
+        log.info("boardReadDTO = " + boardReadDTO);
 
         if (boardReadDTO == null) {
             log.info("no board--------------------------");
@@ -96,6 +124,7 @@ public class BoardService {
         }
         return boardReadDTO;
     }
+
     @Transactional
     public Long updateBoard(
             Long bno,
