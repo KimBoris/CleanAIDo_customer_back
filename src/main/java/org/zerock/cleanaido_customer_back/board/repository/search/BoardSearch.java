@@ -16,5 +16,5 @@ public interface BoardSearch
     PageResponseDTO<BoardListDTO> list(PageRequestDTO pageRequestDTO);
 
     PageResponseDTO<BoardListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO);
-
+    BoardReadDTO getBoard(Long bno) ;
 }

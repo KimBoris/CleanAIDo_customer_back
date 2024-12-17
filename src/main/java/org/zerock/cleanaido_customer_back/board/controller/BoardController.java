@@ -15,6 +15,7 @@ import org.zerock.cleanaido_customer_back.board.service.BoardService;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.common.dto.SearchDTO;
+import org.zerock.cleanaido_customer_back.common.dto.UploadDTO;
 import org.zerock.cleanaido_customer_back.product.dto.ProductReadDTO;
 
 import java.util.List;
@@ -44,7 +45,6 @@ public class BoardController {
                 .build();
 
         if (searchDTO.getKeyword() == null || searchDTO.getType() == null) {
-
             return ResponseEntity.ok(boardService.listBoard(pageRequestDTO));
         } else {
             return ResponseEntity.ok(boardService.search(pageRequestDTO));
@@ -54,23 +54,26 @@ public class BoardController {
 
     //    @PostMapping(value = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping("register")
-    public ResponseEntity<String> register(@ModelAttribute BoardRegisterDTO boardRegisterDTO) {
+    public ResponseEntity<String> register(@ModelAttribute BoardRegisterDTO boardRegisterDTO,
+                                           @RequestParam("imageFiles") MultipartFile[] imageFiles) {
 
         String customerId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         boardRegisterDTO.setCustomerId(customerId); // customerId 설정
 
-        Long bno = boardService.registerBoard(boardRegisterDTO);
+        UploadDTO imageUploadDTO = new UploadDTO(imageFiles, null);
 
-        return ResponseEntity.ok(bno+"번 게시물이 등록되었습니다.");
+        Long bno = boardService.registerBoard(boardRegisterDTO, imageUploadDTO);
+
+        return ResponseEntity.ok(bno + "번 게시물이 등록되었습니다.");
     }
 
     @PutMapping("delete/{bno}")
     public ResponseEntity<String> delete(@PathVariable Long bno) {
 
-         boardService.deleteBoard(bno);
+        boardService.deleteBoard(bno);
 
-         return ResponseEntity.ok("삭제되었습니다.");
+        return ResponseEntity.ok("삭제되었습니다.");
     }
 
     @GetMapping("{bno}")
@@ -86,7 +89,7 @@ public class BoardController {
         Long updatedBno = boardService.updateBoard(
                 bno, boardRegisterDTO);
 
-        return ResponseEntity.ok(updatedBno+"번이 수정 되었습니다.");
+        return ResponseEntity.ok(updatedBno + "번이 수정 되었습니다.");
     }
 
 }
