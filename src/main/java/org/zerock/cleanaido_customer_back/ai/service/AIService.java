@@ -43,7 +43,7 @@ public class AIService {
             throw new RuntimeException("Image file does not exist: " + file.getAbsolutePath());
         }
 
-        String pythonServerUrl = "http://127.0.0.1:8000/get-images";
+        String pythonServerUrl = "http://43.203.169.10:8000/get-images";
 
         // RestTemplate 초기화
         RestTemplate restTemplate = new RestTemplate();
@@ -100,7 +100,7 @@ public class AIService {
 
         log.info("---service start---");
 
-        String pythonServerUrl = "http://127.0.0.1:8000/get-solution";
+        String pythonServerUrl = "http://43.203.169.10:8000/get-solution";
 
         // 쿼리 파라미터에 포함될 데이터 설정
         String url = pythonServerUrl + "?keywords=" + question;
