@@ -13,7 +13,7 @@ import org.zerock.cleanaido_customer_back.common.dto.TempUploadDTO;
 @Log4j2
 @RequestMapping("/api/v1/ai")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"})
+@CrossOrigin(origins = "*")
 public class AiController {
 
     private final AIService aiService;
@@ -40,9 +40,9 @@ public class AiController {
 
         String question = extractedCategory + customerText;
 
-        //지피티에게 답변받기
         aiService.deleteTempImg(imageTitle);
 
+        //지피티에게 답변받기
         String solution = aiService.getSolution(question);
 
         return new SolutionDTO(extractedCategory, solution);
