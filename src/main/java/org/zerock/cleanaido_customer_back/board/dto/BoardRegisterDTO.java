@@ -27,6 +27,4 @@ public class BoardRegisterDTO {
     private boolean delFlag;
 
     private String customerId;
-
-
 }

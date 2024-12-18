@@ -10,6 +10,7 @@ import org.zerock.cleanaido_customer_back.board.dto.BoardListDTO;
 import org.zerock.cleanaido_customer_back.board.dto.BoardReadDTO;
 import org.zerock.cleanaido_customer_back.board.dto.BoardRegisterDTO;
 import org.zerock.cleanaido_customer_back.board.entity.Board;
+import org.zerock.cleanaido_customer_back.board.entity.ImageFile;
 import org.zerock.cleanaido_customer_back.board.repository.BoardRepository;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
@@ -18,10 +19,7 @@ import org.zerock.cleanaido_customer_back.common.util.CustomFileUtil;
 import org.zerock.cleanaido_customer_back.customer.entity.Customer;
 import org.zerock.cleanaido_customer_back.customer.repository.CustomerRepository;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -128,13 +126,42 @@ public class BoardService {
     @Transactional
     public Long updateBoard(
             Long bno,
-            BoardRegisterDTO boardRegisterDTO) {
+            BoardRegisterDTO boardRegisterDTO,
+            List<String> oldImageFiles,
+            UploadDTO imageUploadDTO) {
+
+        List<String> safeOldImageFiles = (oldImageFiles != null) ? oldImageFiles : new ArrayList<>();
+
+        for (String file : safeOldImageFiles) {
+            log.info("Safe Old Image File: {}", file);
+        }
 
         Board board = boardRepository.findById(bno)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Board ID: " + bno));
 
         board.setTitle(boardRegisterDTO.getTitle());
         board.setDescription(boardRegisterDTO.getDescription());
+
+        List<String> oldFileNames = board.getImageFiles().stream()
+                .map(ImageFile::getFileName)
+                .collect(Collectors.toList());
+
+        for (String file : oldFileNames) {
+            log.info("saved files: {}", file);
+        }
+
+        List<String> filesToDelete = oldFileNames.stream()
+                .filter(oldFile -> !safeOldImageFiles.contains(oldFile))
+                .collect(Collectors.toList());
+
+        if (!filesToDelete.isEmpty()) {
+            for (String file : filesToDelete) {
+                //S3 연결할때 작업예정
+//                s3Uploader.removeS3File(file);
+            }
+            board.getImageFiles().removeIf(imageFile -> filesToDelete.contains(imageFile.getFileName()));
+        }
+        processImages(board, imageUploadDTO);
 
         boardRepository.save(board);
 
