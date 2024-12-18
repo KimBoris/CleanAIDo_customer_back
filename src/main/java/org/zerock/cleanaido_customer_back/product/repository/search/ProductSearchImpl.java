@@ -67,9 +67,6 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
         List<ProductListDTO> dtoList = results.fetch();
 
-        log.info("--------------------");
-        log.info(dtoList);
-
         long total = query.fetchCount();
 
         return PageResponseDTO.<ProductListDTO>withAll().
@@ -86,15 +83,15 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         QCategory category = QCategory.category;
         QReview review = QReview.review;
 
-
-        JPQLQuery<Product> query = from(product);
+        JPQLQuery<Product> query = from(product).where(product.pstatus.eq("selling"));
         query.leftJoin(product.imageFiles, imageFile).on(imageFile.ord.eq(0));
         query.leftJoin(product.category, category).on(category.cno.eq(product.category.cno));
         query.leftJoin(review).on(review.product.eq(product));
         query.groupBy(product);
         query.orderBy(product.pno.desc());
 
-        log.info("Type = " + type);
+
+
 
         if (type == null || type.isEmpty()) {
             BooleanBuilder builder = new BooleanBuilder();
@@ -102,11 +99,8 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                     .or(product.pname.like("%" + keyword + "%"))
                     .or(product.ptags.like("%" + keyword + "%"));
             query.where(builder).distinct();
-            log.info("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe");
         } else if (type.equals("category")) {
             query.where(category.cname.like("%" + keyword + "%"));
-            log.info("ddddddddddddddddddddddddddddddddddddddddd");
-
         }
 
         query.orderBy(product.pno.desc());
@@ -114,9 +108,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
 
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
 
-
         getQuerydsl().applyPagination(pageable, query);
-
         JPQLQuery<ProductListDTO> results =
                 query.select(
                         Projections.bean(
@@ -134,15 +126,14 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 );
 
         List<ProductListDTO> dtoList = results.fetch();
-        log.info(results);
 
         long total = query.fetchCount();
 
-        return PageResponseDTO.<ProductListDTO>withAll()
-                .dtoList(dtoList)
-                .totalCount(total)
-                .pageRequestDTO(pageRequestDTO)
-                .build();
+        return PageResponseDTO.<ProductListDTO>withAll().
+                dtoList(dtoList).
+                totalCount(total).
+                pageRequestDTO(pageRequestDTO).
+                build();
     }
     
     // 랜덤으로 가져오는 추천상품 리스트
