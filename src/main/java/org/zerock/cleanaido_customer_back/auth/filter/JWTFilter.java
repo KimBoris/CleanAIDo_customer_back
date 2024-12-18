@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,7 +22,7 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.startsWith("/api/auth/");
+        return path.startsWith("/api/auth/"); // 인증이 필요하지 않은 경로 제외
     }
 
     @Override
@@ -35,13 +36,14 @@ public class JWTFilter extends OncePerRequestFilter {
             String customerId = jwtUtil.validateAndExtract(token);
 
             if (customerId != null) {
-                SecurityContextHolder.getContext().setAuthentication(new JWTAuthenticationToken(customerId));
+                // 권한 없이 인증만 설정
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(customerId, null, null);
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } else {
-            System.out.println("Authorization header is missing or invalid for path: " + request.getRequestURI());
         }
 
         filterChain.doFilter(request, response);
     }
 }
-

@@ -4,6 +4,7 @@ package org.zerock.cleanaido_customer_back.customer.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.zerock.cleanaido_customer_back.cart.entity.Cart;
 import org.zerock.cleanaido_customer_back.order.entity.Order;
 
 import java.sql.Timestamp;
