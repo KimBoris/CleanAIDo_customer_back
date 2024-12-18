@@ -38,7 +38,8 @@ public class SecurityConfig {
                                 "/login",
                                 "/api/v1/mypage/order/pay/completed",
                                 "/api/v1/category/list",
-                                "/api/v1/mypage/order/list"
+                                "/api/v1/mypage/order/list",
+                                "/api/v1/product/read/**"
 
                         ).permitAll()
                         // Preflight 요청 OPTIONS 메서드 허용
