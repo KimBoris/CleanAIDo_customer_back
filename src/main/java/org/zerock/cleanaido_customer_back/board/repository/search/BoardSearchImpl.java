@@ -13,6 +13,7 @@ import org.zerock.cleanaido_customer_back.board.dto.BoardReadDTO;
 import org.zerock.cleanaido_customer_back.board.entity.Board;
 import org.zerock.cleanaido_customer_back.board.entity.ImageFile;
 import org.zerock.cleanaido_customer_back.board.entity.QBoard;
+import org.zerock.cleanaido_customer_back.board.entity.QImageFile;
 import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.customer.entity.QCustomer;
@@ -65,8 +66,9 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
         QBoard board = QBoard.board;
         QCustomer customer = QCustomer.customer;
+        QImageFile imageFile = QImageFile.imageFile;
         JPQLQuery<Board> query = from(board).leftJoin(board.customer, customer);
-
+        query.leftJoin(board.imageFiles, imageFile).on(imageFile.ord.eq(0));
         query.orderBy(board.bno.desc());
 
         Pageable pageable = PageRequest.of
@@ -83,7 +85,8 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                         board.createTime,
                         board.viewCount,
                         board.delFlag,
-                        customer.customerId.as("customerId") // DTO 필드와 매핑
+                        customer.customerId.as("customerId"), // DTO 필드와 매핑
+                        imageFile.fileName
                 )
         );
 
