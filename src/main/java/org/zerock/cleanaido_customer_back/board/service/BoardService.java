@@ -40,6 +40,8 @@ public class BoardService {
         }
         PageResponseDTO<BoardListDTO> response = boardRepository.list(pageRequestDTO);
 
+        log.info("---------------------");
+        log.info(response);
         return response;
     }
 
@@ -58,6 +60,7 @@ public class BoardService {
                         .delFlag(board.isDelFlag())
                         .viewCount(board.getViewCount())
                         .customerId(board.getCustomerId())
+                        .fileName(board.getFileName())
                         .build()).collect(Collectors.toList());
 
         log.info(dtoList);
@@ -113,6 +116,8 @@ public class BoardService {
     public BoardReadDTO readBoard(Long bno) {
 
         BoardReadDTO boardReadDTO = boardRepository.getBoard(bno);
+
+        boardReadDTO.setViewCount(boardReadDTO.getViewCount()+1);
 
         log.info("boardReadDTO = " + boardReadDTO);
 
