@@ -18,7 +18,7 @@ public class CartDetailDTO {
 
     private Map<String, Object> product;
 
-    public CartDetailDTO(Long cdno, Long cartNo, Long productNumber, String productName, int price, int quantity) {
+    public CartDetailDTO(Long cdno, Long cartNo, Long productNumber, String productName, int price, int quantity, String fileName) {
         this.cdno = cdno;
         this.cartNo = cartNo;
         this.quantity = quantity;
@@ -26,7 +26,8 @@ public class CartDetailDTO {
         this.product = Map.of(
                 "pno", productNumber,
                 "pname", productName,
-                "price", price
+                "price", price,
+                "fileName", fileName // 파일명 추가
         );
     }
 }
