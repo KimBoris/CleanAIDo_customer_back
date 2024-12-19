@@ -91,7 +91,7 @@ public class OrderController {
         return """
                 <script>
                     alert('주문이 완료되었습니다')
-                    window.location = "http://10.10.10.151:5173/mypage/order/complete";
+                    window.location = "http://www.cleanaido.shop/mypage/order/complete";
                 </script>
                 """;
     }
