@@ -13,7 +13,7 @@ public class JWTUtil {
 
 
     private final Key secretKey; // Base64 디코딩 후 Key로 변환
-    private final long accessExpiration = 1000 * 60 * 60; // 1시간
+    private final long accessExpiration = 1000 * 60 * 60* 24; // 1시간
     private final long refreshExpiration = 1000 * 60 * 60 * 24 * 7; // 7일
 
     public JWTUtil(@Value("${jwt.secret}") String secretKey) {
