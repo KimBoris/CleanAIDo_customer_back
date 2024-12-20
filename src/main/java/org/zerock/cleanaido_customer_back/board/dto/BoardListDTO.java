@@ -25,6 +25,6 @@ public class BoardListDTO {
 
     private String customerId;
 
-
+    private String fileName;
 
 }

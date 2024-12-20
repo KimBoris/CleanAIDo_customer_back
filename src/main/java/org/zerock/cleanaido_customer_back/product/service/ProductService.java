@@ -69,6 +69,7 @@ public class ProductService {
                         .price(product.getPrice())
                         .pstatus(product.getPstatus())
                         .fileName(product.getFileName())
+                        .score(product.getScore())
                         .reviewCount(product.getReviewCount())
                         .category(product.getCategory())
                         .build()).collect(Collectors.toList());

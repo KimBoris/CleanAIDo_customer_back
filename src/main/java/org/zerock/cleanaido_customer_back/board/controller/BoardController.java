@@ -53,11 +53,9 @@ public class BoardController {
 
     }
 
-    //    @PostMapping(value = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PostMapping("register")
+    @PostMapping(value = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> register(@ModelAttribute BoardRegisterDTO boardRegisterDTO,
-                                           @RequestParam("imageFiles") MultipartFile[] imageFiles,
-                                           @RequestParam(value = "oldImageFiles", required = false) List<String> oldImageFiles) {
+                                           @RequestParam(value = "imageFiles", required = false) MultipartFile[] imageFiles) {
 
         String customerId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -84,23 +82,18 @@ public class BoardController {
         return ResponseEntity.ok(readDTO);
     }
 
-    @PutMapping(value = "{bno}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "edit/{bno}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> update(
             @PathVariable Long bno,
             @ModelAttribute BoardRegisterDTO boardRegisterDTO,
             @RequestParam(value = "oldImageFiles", required = false) List<String> oldImageFiles,
             @RequestParam(value = "imageFiles", required = false) MultipartFile[] imageFiles) {
 
-        UploadDTO imageUploadDTO = (imageFiles != null) ? new UploadDTO(imageFiles, null):null;
+        UploadDTO imageUploadDTO = (imageFiles != null) ? new UploadDTO(imageFiles, null) : null;
 
-        Long updatedBno = boardService.updateBoard(
-                bno,
-                boardRegisterDTO,
-                oldImageFiles,
-                imageUploadDTO
-        );
+        Long updatedBno = boardService.updateBoard(bno, boardRegisterDTO, oldImageFiles, imageUploadDTO);
 
-        return ResponseEntity.ok(updatedBno + "번이 수정 되었습니다.");
+        return ResponseEntity.ok(updatedBno + "번 게시물이 수정되었습니다.");
     }
 
 }

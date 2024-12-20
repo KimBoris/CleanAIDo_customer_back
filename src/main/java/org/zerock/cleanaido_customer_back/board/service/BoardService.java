@@ -40,6 +40,8 @@ public class BoardService {
         }
         PageResponseDTO<BoardListDTO> response = boardRepository.list(pageRequestDTO);
 
+        log.info("---------------------");
+        log.info(response);
         return response;
     }
 
@@ -58,6 +60,7 @@ public class BoardService {
                         .delFlag(board.isDelFlag())
                         .viewCount(board.getViewCount())
                         .customerId(board.getCustomerId())
+                        .fileName(board.getFileName())
                         .build()).collect(Collectors.toList());
 
         log.info(dtoList);
@@ -71,6 +74,9 @@ public class BoardService {
 
         Customer customer = customerRepository.findById(boardRegisterDTO.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        log.info("----------------------------");
+        log.info(customer);
 
         Board board = Board.builder().
                 bno(boardRegisterDTO.getBno()).
@@ -113,6 +119,8 @@ public class BoardService {
     public BoardReadDTO readBoard(Long bno) {
 
         BoardReadDTO boardReadDTO = boardRepository.getBoard(bno);
+
+        boardReadDTO.setViewCount(boardReadDTO.getViewCount()+1);
 
         log.info("boardReadDTO = " + boardReadDTO);
 
@@ -161,7 +169,9 @@ public class BoardService {
             }
             board.getImageFiles().removeIf(imageFile -> filesToDelete.contains(imageFile.getFileName()));
         }
-        processImages(board, imageUploadDTO);
+        if(imageUploadDTO != null) {
+            processImages(board, imageUploadDTO);
+        }
 
         boardRepository.save(board);
 
