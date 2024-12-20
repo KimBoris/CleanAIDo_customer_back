@@ -55,7 +55,7 @@ public class BoardController {
 
     @PostMapping(value = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> register(@ModelAttribute BoardRegisterDTO boardRegisterDTO,
-                                           @RequestParam("imageFiles") MultipartFile[] imageFiles) {
+                                           @RequestParam(value = "imageFiles", required = false) MultipartFile[] imageFiles) {
 
         String customerId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

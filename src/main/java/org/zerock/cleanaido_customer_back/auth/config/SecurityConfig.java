@@ -46,7 +46,7 @@ public class SecurityConfig {
 
                         ).permitAll()
                         // Preflight 요청 OPTIONS 메서드 허용
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        //.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // 그 외 요청은 인증 필요
                         .anyRequest().authenticated()
                 )

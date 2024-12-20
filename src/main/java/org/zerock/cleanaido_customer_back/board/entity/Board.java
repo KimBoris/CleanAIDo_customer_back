@@ -1,6 +1,7 @@
 package org.zerock.cleanaido_customer_back.board.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.zerock.cleanaido_customer_back.customer.entity.Customer;

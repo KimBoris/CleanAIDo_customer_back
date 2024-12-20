@@ -169,7 +169,9 @@ public class BoardService {
             }
             board.getImageFiles().removeIf(imageFile -> filesToDelete.contains(imageFile.getFileName()));
         }
-        processImages(board, imageUploadDTO);
+        if(imageUploadDTO != null) {
+            processImages(board, imageUploadDTO);
+        }
 
         boardRepository.save(board);
 
