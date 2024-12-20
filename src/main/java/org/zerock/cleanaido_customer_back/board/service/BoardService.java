@@ -75,6 +75,9 @@ public class BoardService {
         Customer customer = customerRepository.findById(boardRegisterDTO.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
+        log.info("----------------------------");
+        log.info(customer);
+
         Board board = Board.builder().
                 bno(boardRegisterDTO.getBno()).
                 title(boardRegisterDTO.getTitle()).

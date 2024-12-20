@@ -35,7 +35,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
         JPQLQuery<Board> query = from(board)
                 .leftJoin(board.customer, customer)
-                .where(board.bno.eq(bno));
+                .where(board.bno.eq(bno).and(board.delFlag.isFalse()));
         Board result = query.fetchOne();
 
         List<String> imageFiles = result.getImageFiles().stream().map(ImageFile::getFileName).toList();
@@ -67,7 +67,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         QBoard board = QBoard.board;
         QCustomer customer = QCustomer.customer;
         QImageFile imageFile = QImageFile.imageFile;
-        JPQLQuery<Board> query = from(board).leftJoin(board.customer, customer);
+        JPQLQuery<Board> query = from(board).where(board.delFlag.isFalse()).leftJoin(board.customer, customer);
         query.leftJoin(board.imageFiles, imageFile).on(imageFile.ord.eq(0));
         query.orderBy(board.bno.desc());
 
