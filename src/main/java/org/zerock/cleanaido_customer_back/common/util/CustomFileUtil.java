@@ -26,6 +26,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CustomFileUtil {
 
+  private final S3Uploader s3Uploader;
+
   @Value("${org.zerock.upload.path}")
   private String uploadPath;
 
@@ -46,34 +48,37 @@ public class CustomFileUtil {
   public List<String> saveFiles(List<MultipartFile> files)throws RuntimeException{
 
     if(files == null || files.size() == 0){
-      return null; 
+      return null;
     }
 
     List<String> uploadNames = new ArrayList<>();
+    List<String> uploadThumbNailNames = new ArrayList<>();
 
     for (MultipartFile multipartFile : files) {
-        
+
       String savedName = UUID.randomUUID().toString() + "_" + multipartFile.getOriginalFilename();
-      
+
       Path savePath = Paths.get(uploadPath, savedName);
 
       try {
         Files.copy(multipartFile.getInputStream(), savePath);
-
+        String uploadedUrl = s3Uploader.upload(uploadPath+"/"+savedName);
         String contentType = multipartFile.getContentType();
 
         if(contentType != null && contentType.startsWith("image")){ //이미지여부 확인
-
           Path thumbnailPath = Paths.get(uploadPath, "s_"+savedName);
-
           Thumbnails.of(savePath.toFile())
                   .size(400,400)
                   .toFile(thumbnailPath.toFile());
         }
-
+        String uploadThumbnailUrl = s3Uploader.upload(uploadPath+"/s_"+savedName);
         uploadNames.add(savedName);
+        uploadThumbNailNames.add("s_"+savedName);
       } catch (IOException e) {
         throw new RuntimeException(e.getMessage());
+      }finally {
+        deleteFiles(uploadNames);
+        deleteFiles(uploadThumbNailNames);
       }
     }//end for
     return uploadNames;
