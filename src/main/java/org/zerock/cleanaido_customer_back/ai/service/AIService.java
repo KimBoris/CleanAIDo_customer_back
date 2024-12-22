@@ -37,7 +37,8 @@ public class AIService {
 
         log.info("---service start---");
 
-        File file = new File(uploadPath +"\\"+ imageTitle);
+        File file = new File(uploadPath + File.separator + imageTitle);
+
 
         if (!file.exists() || !file.isFile()) {
             throw new RuntimeException("Image file does not exist: " + file.getAbsolutePath());
