@@ -16,6 +16,7 @@ import org.zerock.cleanaido_customer_back.common.dto.PageRequestDTO;
 import org.zerock.cleanaido_customer_back.common.dto.PageResponseDTO;
 import org.zerock.cleanaido_customer_back.common.dto.UploadDTO;
 import org.zerock.cleanaido_customer_back.common.util.CustomFileUtil;
+import org.zerock.cleanaido_customer_back.common.util.S3Uploader;
 import org.zerock.cleanaido_customer_back.customer.entity.Customer;
 import org.zerock.cleanaido_customer_back.customer.repository.CustomerRepository;
 
@@ -31,7 +32,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final CustomFileUtil customFileUtil;
     private final CustomerRepository customerRepository;
-//    private final S3Uploader s3Uploader;
+    private final S3Uploader s3Uploader;
 
 
     public PageResponseDTO<BoardListDTO> listBoard(PageRequestDTO pageRequestDTO) {
@@ -164,8 +165,7 @@ public class BoardService {
 
         if (!filesToDelete.isEmpty()) {
             for (String file : filesToDelete) {
-                //S3 연결할때 작업예정
-//                s3Uploader.removeS3File(file);
+                s3Uploader.removeS3File(file);
             }
             board.getImageFiles().removeIf(imageFile -> filesToDelete.contains(imageFile.getFileName()));
         }
