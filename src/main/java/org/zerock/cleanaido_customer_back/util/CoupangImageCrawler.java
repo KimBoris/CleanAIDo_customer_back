@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+//쿠팡 이미지 크롤링
 public class CoupangImageCrawler {
 
     public static void main(String[] args) {

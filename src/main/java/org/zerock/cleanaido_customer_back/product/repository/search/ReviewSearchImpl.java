@@ -24,6 +24,8 @@ public class ReviewSearchImpl extends QuerydslRepositorySupport implements Revie
         super(Review.class);
     }
 
+
+    //리뷰 리스트
     @Override
     public PageResponseDTO<ReviewListDTO> listByProduct(PageRequestDTO pageRequestDTO, Long pno) {
 
@@ -65,6 +67,7 @@ public class ReviewSearchImpl extends QuerydslRepositorySupport implements Revie
                 .build();
     }
 
+    //유저 리뷰 검색
     @Override
     public PageResponseDTO<ReviewListDTO> listByCustomer(PageRequestDTO pageRequestDTO, String customerId) {
 

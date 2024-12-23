@@ -22,6 +22,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
 
+    //카테고리 리스트
     @GetMapping("list")
     public ResponseEntity<List<CategoryListDTO>> list() {
         // 페이지네이션 없이 전체 카테고리 리스트를 반환

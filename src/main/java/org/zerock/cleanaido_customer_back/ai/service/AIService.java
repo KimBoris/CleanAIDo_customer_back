@@ -33,17 +33,17 @@ public class AIService {
     private final AIRepository aiRepository;
     private final CustomFileUtil customFileUtil;
 
+    //이미지 가져오기
     public String[] getImagelist(String imageTitle) throws Exception {
 
         log.info("---service start---");
-
-        File file = new File(uploadPath + File.separator + imageTitle);
-
+        //upload될 경로 설정
+        File file = new File(uploadPath +"\\"+ imageTitle);
 
         if (!file.exists() || !file.isFile()) {
             throw new RuntimeException("Image file does not exist: " + file.getAbsolutePath());
         }
-
+        //파이썬(AI) 서버 URL
         String pythonServerUrl = "http://43.203.169.10:8000/get-images";
 
         // RestTemplate 초기화

@@ -28,6 +28,7 @@ public class CartService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
 
+    //장바구니 리스트
     public List<CartDetailDTO> listCartDetail(String customerId){
 
         log.info("---service start---");
@@ -35,6 +36,7 @@ public class CartService {
         return cartDetailRepository.list(customerId);
     }
 
+    //장바구니 물품 추가
     public Long addCartDetail(Long pno, int qty) {
         log.info("Adding cart detail - product: {}, quantity: {}", pno, qty);
 
@@ -70,6 +72,7 @@ public class CartService {
     }
 
 
+    //장바구니 상세 삭제
     public Long deleteCartDetail(Long id){
 
         cartDetailRepository.deleteById(id);
@@ -77,6 +80,7 @@ public class CartService {
         return id;
     }
 
+    //장바구니 물품 수량 수정
     public Long updateQty(Long cdno, int qty) {
         // 원하는 cart detail을 찾기 위해 cdno로 조회
         CartDetail cartDetail = cartDetailRepository.findById(cdno)

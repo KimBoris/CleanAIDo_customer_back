@@ -21,6 +21,8 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+
+    //카테고리 리스트 조회
     public List<CategoryListDTO> getCategoryList() {
         // Repository를 호출하여 전체 데이터를 가져옴
         return categoryRepository.getCategoryList();

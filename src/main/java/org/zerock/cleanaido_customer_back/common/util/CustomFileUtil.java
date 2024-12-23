@@ -45,6 +45,7 @@ public class CustomFileUtil {
     log.info(uploadPath);
   }
 
+  //파일 저장
   public List<String> saveFiles(List<MultipartFile> files)throws RuntimeException{
 
     if(files == null || files.size() == 0){
@@ -105,6 +106,7 @@ public class CustomFileUtil {
   }
 
 
+  //여러파일 삭제
   public void deleteFiles(List<String> fileNames) {
 
     if(fileNames == null || fileNames.size() == 0){
@@ -126,7 +128,7 @@ public class CustomFileUtil {
       }
     });
   }
-
+  //파일 저장
   public String saveFile(MultipartFile file) throws RuntimeException {
 
     if (file == null || file.isEmpty()) {
@@ -148,7 +150,7 @@ public class CustomFileUtil {
 
     return savedName;
   }
-
+  //파일 삭제
   public void deleteFile(String fileName) {
 
     if (fileName == null) {

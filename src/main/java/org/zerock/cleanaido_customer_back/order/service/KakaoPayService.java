@@ -13,6 +13,7 @@ import org.zerock.cleanaido_customer_back.common.dto.ReadyResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+//카카오페이 결제 API
 @Service
 @Log4j2
 public class KakaoPayService {

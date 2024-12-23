@@ -27,6 +27,7 @@ public class CartDetail {
     @JoinColumn(name = "product_number", nullable = false)
     private Product product;
 
+    //수량
     @Column(name = "quantity", nullable = false)
     private int quantity;
 }

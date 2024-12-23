@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Service
 public class KakaoService {
-
+    //로그인 후 엑세스 토큰 가져오기
     public String getAccessToken(String code) {
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -21,9 +21,9 @@ public class KakaoService {
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("grant_type", "authorization_code");
             params.add("client_id", "bd7725f821010811fbfbb131b8f9985d");
-            params.add("redirect_uri", "http://www.cleanaido.shop/oauth/kakao/callback");
-            //params.add("redirect_uri", "http://10.10.10.152:5173/oauth/kakao/callback");
-            //params.add("redirect_uri", "http://localhost:5173/oauth/kakao/callback");
+//            params.add("redirect_uri", "http://www.cleanaido.shop/oauth/kakao/callback");
+//            params.add("redirect_uri", "http://10.10.10.152:5173/oauth/kakao/callback");
+            params.add("redirect_uri", "http://localhost:5173/oauth/kakao/callback");
             params.add("code", code);
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
@@ -40,6 +40,7 @@ public class KakaoService {
         }
     }
 
+    //카카오 API를 통한 유저 데이터 가져오기
     public KakaoUserDTO getUserInfo(String accessToken) {
         try {
             RestTemplate restTemplate = new RestTemplate();
@@ -72,6 +73,4 @@ public class KakaoService {
             throw new IllegalArgumentException("Error during Kakao user info retrieval: " + e.getMessage(), e);
         }
     }
-
-
 }
