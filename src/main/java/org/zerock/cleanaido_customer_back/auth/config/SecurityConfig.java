@@ -17,6 +17,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+
+//스프링 시큐리티 세팅
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
@@ -24,6 +26,7 @@ public class SecurityConfig {
 
     private final JWTFilter jwtFilter;
 
+    //스프링 시큐리티 필터 적용하기
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -40,9 +43,9 @@ public class SecurityConfig {
                                 "/api/v1/category/list",
                                 "/api/v1/mypage/order/list",
                                 "/api/v1/product/read/**",
-                                "/api/v1/board/**",
-                                "/api/v1/board/edit/**",
-                                "/api/v1/board/register"
+                                "/api/v1/board/**"
+//                                "/api/v1/board/edit/**",
+//                                "/api/v1/board/register"
 
                         ).permitAll()
                         // Preflight 요청 OPTIONS 메서드 허용

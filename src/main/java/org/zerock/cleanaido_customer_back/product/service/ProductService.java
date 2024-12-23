@@ -25,6 +25,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    //상품 리스트
     public PageResponseDTO<ProductListDTO> listProduct(PageRequestDTO pageRequestDTO) {
 
         if (pageRequestDTO.getPage() < 1) {
@@ -39,6 +40,7 @@ public class ProductService {
         return response;
     }
 
+    //상품 상세정보
     public ProductReadDTO readProduct(Long pno) {
 
         ProductReadDTO productReadDTO = productRepository.getProduct(pno);
@@ -51,6 +53,7 @@ public class ProductService {
         return productReadDTO;
     }
 
+    //상품 검색
     public PageResponseDTO<ProductListDTO> search(PageRequestDTO pageRequestDTO) {
         String type = pageRequestDTO.getSearchDTO().getType();
         String keyword = pageRequestDTO.getSearchDTO().getKeyword();
@@ -73,7 +76,6 @@ public class ProductService {
                         .reviewCount(product.getReviewCount())
                         .category(product.getCategory())
                         .build()).collect(Collectors.toList());
-
 
         log.info(pageable);
         log.info(dtoList);
@@ -98,8 +100,5 @@ public class ProductService {
         PageResponseDTO<ProductListDTO> response = productRepository.listFreq(customerId, pageRequestDTO);
 
         return response;
-
     }
-
-
 }

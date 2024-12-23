@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+//env파일 실행
 @Component
 @Log4j2
 public class EnvRunner implements CommandLineRunner {

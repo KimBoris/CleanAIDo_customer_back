@@ -30,6 +30,8 @@ public class BoardController {
 
     private final BoardService boardService;
 
+
+    //게시판 리스트
     @GetMapping("list")
     public ResponseEntity<PageResponseDTO<BoardListDTO>> list(@RequestParam(value = "page", defaultValue = "1") int page,
                                                               @RequestParam(value = "size", defaultValue = "10") int size,
@@ -45,6 +47,7 @@ public class BoardController {
                 .searchDTO(searchDTO)
                 .build();
 
+        //리스트와 상세보기 분기처리
         if (searchDTO.getKeyword() == null || searchDTO.getType() == null) {
             return ResponseEntity.ok(boardService.listBoard(pageRequestDTO));
         } else {
@@ -53,10 +56,12 @@ public class BoardController {
 
     }
 
+    //게시판 등록
     @PostMapping(value = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> register(@ModelAttribute BoardRegisterDTO boardRegisterDTO,
                                            @RequestParam(value = "imageFiles", required = false) MultipartFile[] imageFiles) {
 
+        //로그인한 유저 아이디 가져오기
         String customerId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         boardRegisterDTO.setCustomerId(customerId); // customerId 설정
@@ -68,6 +73,7 @@ public class BoardController {
         return ResponseEntity.ok(bno + "번 게시물이 등록되었습니다.");
     }
 
+    //게시판 softDelete
     @PutMapping("delete/{bno}")
     public ResponseEntity<String> delete(@PathVariable Long bno) {
 
@@ -76,12 +82,15 @@ public class BoardController {
         return ResponseEntity.ok("삭제되었습니다.");
     }
 
+
+    //게시판 상세보기
     @GetMapping("{bno}")
     public ResponseEntity<BoardReadDTO> read(@PathVariable Long bno) {
         BoardReadDTO readDTO = boardService.readBoard(bno);
         return ResponseEntity.ok(readDTO);
     }
 
+    //게시판 수정
     @PutMapping(value = "edit/{bno}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> update(
             @PathVariable Long bno,

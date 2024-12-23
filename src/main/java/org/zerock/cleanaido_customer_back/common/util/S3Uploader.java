@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 
+
+//S3 파일 처리
 @Component
 @RequiredArgsConstructor
 @Log4j2
@@ -41,6 +43,7 @@ public class S3Uploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
+    // S3의 파일 삭제
     public void removeS3File(String fileName){
         final DeleteObjectRequest deleteObjectRequest = new
                 DeleteObjectRequest(bucket, fileName);

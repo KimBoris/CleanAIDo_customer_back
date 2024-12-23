@@ -18,7 +18,7 @@ public class AiController {
 
     private final AIService aiService;
 
-
+    //솔루션 가져오기
     @PostMapping(value = "solution", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Object getSolution(
             @RequestParam MultipartFile imageFile,
@@ -37,7 +37,7 @@ public class AiController {
 
         //카테고리 추출
         String extractedCategory = aiService.getCategory(extractedImages);
-
+        //추출한 카테고리 + 고객 입력 텍스트
         String question = extractedCategory + customerText;
 
         aiService.deleteTempImg(imageTitle);

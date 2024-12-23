@@ -28,6 +28,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         super(Board.class);
     }
 
+    //게시판 상세
     @Override
     public BoardReadDTO getBoard(Long bno) {
         QBoard board = QBoard.board;
@@ -61,6 +62,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
     }
 
+    //게시판 리스트
     @Override
     public PageResponseDTO<BoardListDTO> list(PageRequestDTO pageRequestDTO) {
 
@@ -103,6 +105,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
     }
 
+    //게시판 검색
     @Override
     public PageResponseDTO<BoardListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO) {
         QBoard board = QBoard.board;
@@ -129,6 +132,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage() - 1, pageRequestDTO.getSize());
         getQuerydsl().applyPagination(pageable, query);
 
+        //JPQL 쿼리 결과 대입
         JPQLQuery<BoardListDTO> results = query.select(
                 Projections.bean(
                         BoardListDTO.class,

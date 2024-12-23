@@ -71,6 +71,8 @@ public class ProductController {
 //        return ResponseEntity.ok("Crawling completed and products saved.");
 //    }
 
+
+    //상품 등록
     @PostMapping("")
     public ResponseEntity<Long> register(
             @RequestParam Long pno,

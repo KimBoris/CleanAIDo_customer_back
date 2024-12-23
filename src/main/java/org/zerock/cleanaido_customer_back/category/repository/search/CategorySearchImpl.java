@@ -25,6 +25,7 @@ public class CategorySearchImpl extends QuerydslRepositorySupport implements Cat
         super(Category.class);
     }
 
+    //카테고리 리스트
     @Override
     public List<CategoryListDTO> getCategoryList() {
         QCategory category = QCategory.category;

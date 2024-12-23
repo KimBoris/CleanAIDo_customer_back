@@ -13,6 +13,7 @@ import org.zerock.cleanaido_customer_back.customer.repository.CustomerRepository
 import java.sql.Timestamp;
 import java.util.Optional;
 
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class CustomerService {
         return customerRepository.findById(customerId);
     }
 
+    //고객 등록
     public Customer registerCustomer(CustomerRegisterDTO dto) {
         if (dto.getCustomerId() == null || dto.getCustomerId().isBlank()) {
             throw new IllegalArgumentException("Customer ID (email) is required for registration.");
@@ -53,6 +55,7 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
+    //고객 정보 가져오기
     public Customer getCustomerInfo() {
         // SecurityContextHolder에서 JWT에 담긴 customerId 가져오기
         String customerId = SecurityContextHolder.getContext().getAuthentication().getName();
