@@ -6,6 +6,7 @@ import java.net.URL;
 
 public class ImageDownloadUtil {
 
+    //크롤링 이미지 다운
     public static void downloadImage(String imageUrl, String filePath) {
         try (InputStream in = new URL(imageUrl).openStream();
              FileOutputStream out = new FileOutputStream(filePath)) {

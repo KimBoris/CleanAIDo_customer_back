@@ -25,6 +25,8 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+
+    //리뷰 - 상품 검색
     @GetMapping("listbyproduct")
     public ResponseEntity<PageResponseDTO<ReviewListDTO>> listbyproduct(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -39,6 +41,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.listReviewsByProduct(pageRequestDTO, pno));
     }
 
+    //리뷰 - 고객 검색
     @GetMapping("listbycustomer")
     public ResponseEntity<PageResponseDTO<ReviewListDTO>> listbycustomer(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -55,6 +58,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.listReviewByCustomer(pageRequestDTO, customerId));
     }
 
+    //리뷰 등록
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> register(
             ReviewRegisterDTO reviewRegisterDTO,
@@ -74,6 +78,7 @@ public class ReviewController {
         return ResponseEntity.ok(reviewNumber);
     }
 
+    //리뷰 softDelete
     @PutMapping("delete/{reviewNum}")
     public ResponseEntity<Long> deleteReview(@PathVariable Long reviewNum) {
 

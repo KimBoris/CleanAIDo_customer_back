@@ -35,6 +35,7 @@ public class BoardService {
     private final S3Uploader s3Uploader;
 
 
+    //게시판 리스트
     public PageResponseDTO<BoardListDTO> listBoard(PageRequestDTO pageRequestDTO) {
         if (pageRequestDTO.getPage() < 1) {
             throw new IllegalArgumentException("페이지 번호는 1이상 이어야 합니다.");
@@ -46,6 +47,7 @@ public class BoardService {
         return response;
     }
 
+    //게시판 검색
     public PageResponseDTO<BoardListDTO> search(PageRequestDTO pageRequestDTO) {
         String keyword = pageRequestDTO.getSearchDTO().getKeyword();
         String type = pageRequestDTO.getSearchDTO().getType();
@@ -71,6 +73,7 @@ public class BoardService {
     }
 
 
+    //게시판 등록
     public Long registerBoard(BoardRegisterDTO boardRegisterDTO, UploadDTO imageUploadDTO) {
 
         Customer customer = customerRepository.findById(boardRegisterDTO.getCustomerId())
@@ -99,6 +102,7 @@ public class BoardService {
         return board.getBno();
     }
 
+    //이미지 처리
     private void processImages(Board board, UploadDTO uploadDTO) {
         log.info("Processing image for board: {}", board.getBno());
         log.info("Upload image: {}", uploadDTO);
@@ -117,6 +121,7 @@ public class BoardService {
         }
     }
 
+    //게시판 상세
     public BoardReadDTO readBoard(Long bno) {
 
         BoardReadDTO boardReadDTO = boardRepository.getBoard(bno);
@@ -132,6 +137,7 @@ public class BoardService {
         return boardReadDTO;
     }
 
+    //게시판 수정
     @Transactional
     public Long updateBoard(
             Long bno,
@@ -148,9 +154,10 @@ public class BoardService {
         Board board = boardRepository.findById(bno)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Board ID: " + bno));
 
+        //게시판 데이터 초기화
         board.setTitle(boardRegisterDTO.getTitle());
         board.setDescription(boardRegisterDTO.getDescription());
-
+        //기존 첨부된 이미지 파일
         List<String> oldFileNames = board.getImageFiles().stream()
                 .map(ImageFile::getFileName)
                 .collect(Collectors.toList());
@@ -159,16 +166,19 @@ public class BoardService {
             log.info("saved files: {}", file);
         }
 
+        //삭제해야할 파일
         List<String> filesToDelete = oldFileNames.stream()
                 .filter(oldFile -> !safeOldImageFiles.contains(oldFile))
                 .collect(Collectors.toList());
 
+        //s3에 기존 파일 삭제
         if (!filesToDelete.isEmpty()) {
             for (String file : filesToDelete) {
                 s3Uploader.removeS3File(file);
             }
             board.getImageFiles().removeIf(imageFile -> filesToDelete.contains(imageFile.getFileName()));
         }
+        //새로운 이미지 파일 처리
         if(imageUploadDTO != null) {
             processImages(board, imageUploadDTO);
         }
@@ -178,6 +188,7 @@ public class BoardService {
         return board.getBno();
     }
 
+    //게시판 softDelete
     public String deleteBoard(Long bno) {
         Board board = boardRepository.findById(bno).orElseThrow(()
                 -> new EntityNotFoundException(bno + "를 찾을 수 없습니다."));

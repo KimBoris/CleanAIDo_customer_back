@@ -49,6 +49,7 @@ public class OrderController {
         return ResponseEntity.ok(orderList);
     }
 
+    //주문 정보 업데이트
     @PatchMapping("/{orderNumber}/status")
     public ResponseEntity<String> updateOrderStatus(
             @PathVariable Long orderNumber,
@@ -57,6 +58,7 @@ public class OrderController {
         return ResponseEntity.ok("Order status updated to " + status);
     }
 
+    //결제 준비
     @PostMapping("/pay/ready")
     public @ResponseBody ReadyResponse payReady(
             @RequestParam int totalPrice
@@ -76,6 +78,7 @@ public class OrderController {
     }
 
 
+    //결제 완료
     @GetMapping(value ="/pay/completed", produces = MediaType.TEXT_HTML_VALUE)
     public String payCompleted(@RequestParam("pg_token") String pgToken) {
 

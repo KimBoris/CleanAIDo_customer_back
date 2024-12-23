@@ -12,6 +12,8 @@ import org.zerock.cleanaido_customer_back.customer.service.CustomerService;
 
 import java.util.Map;
 
+
+//고객
 @RestController
 @RequestMapping("/api/v1/customer")
 @Log4j2
@@ -21,6 +23,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    //고객 정보 가져오기
     @GetMapping("/info")
     public ResponseEntity<?> getCustomerInfo() {
         Customer customer = customerService.getCustomerInfo();

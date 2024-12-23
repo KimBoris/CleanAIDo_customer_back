@@ -21,6 +21,8 @@ public class ImageFile {
     @Column(name="file_name")
     private String fileName;
 
+    //type = false (썸네일)
+    //true = 상품이미지 ( 캐럿셀 처리 )
     @Column(name="type")
     private boolean type;
 

@@ -13,18 +13,22 @@ import org.zerock.cleanaido_customer_back.auth.util.JWTUtil;
 
 import java.io.IOException;
 
+
+// JWTFilter 클래스는 OncePerRequestFilter를 상속받아 HTTP 요청마다 JWT(Token) 검증을 처리합니다.
 @Component
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
+    //특정 경로에 대해 필터링을 수행하지 않도록 설정합니다.
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         return path.startsWith("/api/auth/"); // 인증이 필요하지 않은 경로 제외
     }
 
+    //JWT 토큰을 검사하고, 유효한 경우 SecurityContext에 인증 정보를 설정합니다.
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {

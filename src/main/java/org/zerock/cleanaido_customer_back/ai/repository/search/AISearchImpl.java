@@ -15,6 +15,7 @@ public class AISearchImpl extends QuerydslRepositorySupport implements AISearch 
         super(QProduct.class);
     }
 
+    //카테고리 키워드 가져오기
     @Override
     public String getCategorys(String[] imgNames) {
         QProduct product = QProduct.product;

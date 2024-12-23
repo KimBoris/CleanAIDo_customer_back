@@ -26,6 +26,7 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
         super(Product.class);
     }
 
+    //상품 리스트
     @Override
     public PageResponseDTO<ProductListDTO> list(PageRequestDTO pageRequestDTO) {
 
@@ -76,6 +77,8 @@ public class ProductSearchImpl extends QuerydslRepositorySupport implements Prod
                 build();
     }
 
+
+    //상품 검색
     @Override
     public PageResponseDTO<ProductListDTO> searchBy(String type, String keyword, PageRequestDTO pageRequestDTO) {
         QProduct product = QProduct.product;

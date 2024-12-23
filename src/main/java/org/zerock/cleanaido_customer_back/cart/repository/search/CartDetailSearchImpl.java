@@ -21,6 +21,7 @@ public class CartDetailSearchImpl extends QuerydslRepositorySupport implements C
 
     public CartDetailSearchImpl() {super(CartDetail.class);}
 
+    //장바구니 상세 정보
     @Override
     public List<CartDetailDTO> list(String customerId) {
         QProduct product = QProduct.product;

@@ -12,6 +12,7 @@
             super(Customer.class);
         }
 
+        //고객 리스트 조회
         @Override
         public PageResponseDTO<CustomerListDTO> list(Pageable pageable) {
 
